@@ -1,5 +1,6 @@
 /**
  * Checks an assertion. Throws if the assertion is failed.
+ * 断言并抛出错误
  *
  * @param condition - Result of the assertion evaluation
  * @param message - Text to include in the exception message

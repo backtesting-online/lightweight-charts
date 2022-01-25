@@ -60,6 +60,7 @@ export type MouseEventHandler = (param: MouseEventParams) => void;
 
 /**
  * The main interface of a single chart.
+ * 图表的主要接口
  */
 export interface IChartApi {
 	/**
