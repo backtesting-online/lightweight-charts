@@ -93,7 +93,7 @@ export type TickMarkFormatter = (time: UTCTimestamp | BusinessDay, tickMarkType:
 
 /**
  * Options for the time scale; the horizontal scale at the bottom of the chart that displays the time of data.
- * 时间刻度选项;图表底部的水平刻度，用于显示数据时间。
+ * 时间刻度选项; 图表底部的水平刻度，用于显示数据时间。
  */
 export interface TimeScaleOptions {
 	/**
@@ -200,6 +200,7 @@ export interface TimeScaleOptions {
 	tickMarkFormatter?: TickMarkFormatter;
 }
 
+// 时间刻度
 export class TimeScale {
 	private readonly _options: TimeScaleOptions;
 	private readonly _model: ChartModel;
@@ -236,6 +237,7 @@ export class TimeScale {
 		this._barSpacing = options.barSpacing;
 		this._model = model;
 
+		// 生成时间 Formatter
 		this._updateDateTimeFormatter();
 	}
 
@@ -934,8 +936,10 @@ export class TimeScale {
 	}
 
 	private _updateDateTimeFormatter(): void {
+		// 日期格式字符串
 		const dateFormat = this._localizationOptions.dateFormat;
 
+		// 获取时间格式化 Formatter, DateTimeFormatter 和 DateFormatter 封装了简单的时间处理
 		if (this._options.timeVisible) {
 			this._dateTimeFormatter = new DateTimeFormatter({
 				dateFormat: dateFormat,

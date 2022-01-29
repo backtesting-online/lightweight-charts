@@ -365,9 +365,12 @@ export class ChartModel implements IDestroyable {
 		this._invalidateHandler = invalidateHandler;
 		this._options = options;
 
+		// 价格轴渲染器选项的 Provider
 		this._rendererOptionsProvider = new PriceAxisRendererOptionsProvider(this);
 
+		// 时间刻度实例
 		this._timeScale = new TimeScale(this, options.timeScale, this._options.localization);
+		// 十字准星实例
 		this._crosshair = new Crosshair(this, options.crosshair);
 		this._magnet = new Magnet(options.crosshair);
 		this._watermark = new Watermark(this, options.watermark);

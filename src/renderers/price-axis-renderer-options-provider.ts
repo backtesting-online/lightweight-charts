@@ -9,9 +9,11 @@ const enum RendererConstants {
 	TickLength = 4,
 }
 
+// 价格轴渲染器选项的 Provider
 export class PriceAxisRendererOptionsProvider {
 	private readonly _chartModel: ChartModel;
 
+	// 渲染相关的 options
 	private readonly _rendererOptions: PriceAxisViewRendererOptions = {
 		borderSize: RendererConstants.BorderSize,
 		tickLength: RendererConstants.TickLength,
@@ -30,12 +32,14 @@ export class PriceAxisRendererOptionsProvider {
 		this._chartModel = chartModel;
 	}
 
+	// 暴露获取 options 的接口
 	public options(): Readonly<PriceAxisViewRendererOptions> {
 		const rendererOptions = this._rendererOptions;
 
 		const currentFontSize = this._fontSize();
 		const currentFontFamily = this._fontFamily();
 
+		// 如果字体大小或者字体不相同，那么重制下
 		if (rendererOptions.fontSize !== currentFontSize || rendererOptions.fontFamily !== currentFontFamily) {
 			rendererOptions.fontSize = currentFontSize;
 			rendererOptions.fontFamily = currentFontFamily;
@@ -55,6 +59,7 @@ export class PriceAxisRendererOptionsProvider {
 		return this._rendererOptions;
 	}
 
+	// 下面的方法都是从 chartModel 上获取 chart options 的数据
 	private _textColor(): string {
 		return this._chartModel.options().layout.textColor;
 	}

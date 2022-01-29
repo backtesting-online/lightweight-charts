@@ -169,7 +169,7 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 			clone(chartOptionsDefaults) :
 			merge(clone(chartOptionsDefaults), toInternalOptions(options)) as ChartOptionsInternal;
 
-		//
+		// 生成图表组件
 		this._chartWidget = new ChartWidget(container, internalOptions);
 
 		this._chartWidget.clicked().subscribe(

@@ -59,17 +59,22 @@ export class ChartWidget implements IDestroyable {
 	public constructor(container: HTMLElement, options: ChartOptionsInternal) {
 		this._options = options;
 
+		// 创建顶层的 Div
 		this._element = document.createElement('div');
 		this._element.classList.add('tv-lightweight-charts');
 		this._element.style.overflow = 'hidden';
 		this._element.style.width = '100%';
 		this._element.style.height = '100%';
+
+		// 禁止元素被选择
 		disableSelection(this._element);
 
+		// 创建 table 元素
 		this._tableElement = document.createElement('table');
 		this._tableElement.setAttribute('cellspacing', '0');
 		this._element.appendChild(this._tableElement);
 
+		// 滚轮事件
 		this._onWheelBound = this._onMousewheel.bind(this);
 		this._element.addEventListener('wheel', this._onWheelBound, { passive: false });
 

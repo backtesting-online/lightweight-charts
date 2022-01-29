@@ -126,6 +126,7 @@ type RawPriceProvider = () => BarPrice;
 type RawCoordinateProvider = () => Coordinate;
 type RawIndexProvider = () => TimePointIndex;
 
+// 十字准星
 export class Crosshair extends DataSource {
 	private _pane: Pane | null = null;
 	private _price: number = NaN;
