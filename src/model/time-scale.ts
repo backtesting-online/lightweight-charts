@@ -50,6 +50,7 @@ export interface TimeMark {
 
 /**
  * Represents the type of a tick mark on the time axis.
+ * 表示时间轴上刻度线的类型。
  */
 export const enum TickMarkType {
 	/**
@@ -62,14 +63,17 @@ export const enum TickMarkType {
 	Month,
 	/**
 	 * A day of the month.
+	 * 一个月的一天。
 	 */
 	DayOfMonth,
 	/**
 	 * A time without seconds.
+	 * 没有秒的时间。
 	 */
 	Time,
 	/**
 	 * A time with seconds.
+	 * 时间与秒。
 	 */
 	TimeWithSeconds,
 }

@@ -94,18 +94,22 @@ export function fillUpDownCandlesticksColors(options: Partial<CandlestickStyleOp
 
 /**
  * Represents the type of the last price animation for series such as area or line.
+ * 表示区域或线等系列的最后价格动画的类型。
  */
 export const enum LastPriceAnimationMode {
 	/**
 	 * Animation is always disabled
+	 * 🈲️
 	 */
 	Disabled,
 	/**
 	 * Animation is always enabled.
+	 * 始终开启
 	 */
 	Continuous,
 	/**
 	 * Animation is active after new data.
+	 * 新数据后动画处于激活状态
 	 */
 	OnDataUpdate,
 }
@@ -511,14 +515,17 @@ export const enum PriceAxisLastValueMode {
 
 /**
  * Represents the source of data to be used for the horizontal price line.
+ * 水平价格线的数据源
  */
 export const enum PriceLineSource {
 	/**
 	 * Use the last bar data.
+	 * 最后一根柱线数据
 	 */
 	LastBar,
 	/**
 	 * Use the last visible data of the chart viewport.
+	 * 使用图表视口的最后一个可见数据。
 	 */
 	LastVisible,
 }

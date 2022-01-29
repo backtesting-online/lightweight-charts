@@ -36,6 +36,7 @@ import { SeriesItemsIndexesRange, TimePointIndex } from './time-data';
 
 /**
  * Represents the price scale mode.
+ * 价格缩放模式
  */
 export const enum PriceScaleMode {
 	/**

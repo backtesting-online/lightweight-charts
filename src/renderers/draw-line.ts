@@ -11,10 +11,12 @@ export type LineWidth = 1 | 2 | 3 | 4;
 export const enum LineType {
 	/**
 	 * A line.
+	 * 一条线。
 	 */
 	Simple,
 	/**
 	 * A stepped line.
+	 * 一条阶梯线。
 	 */
 	WithSteps,
 }
@@ -54,12 +56,12 @@ export const enum LineStyle {
 	Dashed = 2,
 	/**
 	 * A dashed line with bigger dashes.
-	 * 带有较大破折号的虚线。
+	 * 大虚线
 	 */
 	LargeDashed = 3,
 	/**
 	 * A dottled line with more space between dots.
-	 * 一条斑驳的线，点之间有更多的空间。
+	 * 稀疏点
 	 */
 	SparseDotted = 4,
 }

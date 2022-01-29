@@ -1,10 +1,13 @@
 /**
  * Represents a type of color.
+ * 颜色类型
  */
 export const enum ColorType {
 	/** Solid color */
+	// 固体
 	Solid = 'solid',
 	/** Vertical gradient color */
+	// 垂直渐变
 	VerticalGradient = 'gradient',
 }
 

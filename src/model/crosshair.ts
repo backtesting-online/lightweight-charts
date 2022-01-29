@@ -40,10 +40,12 @@ export type TimeAndCoordinateProvider = () => CrosshairTimeAndCoordinate;
 export const enum CrosshairMode {
 	/**
 	 * This mode allows crosshair to move freely on the chart.
+	 * 此模式允许十字准线在图表上自由移动。
 	 */
 	Normal,
 	/**
 	 * This mode sticks crosshair's horizontal line to the price value of a single-value series or to the close price of OHLC-based series.
+	 * 此模式将十字准线的水平线粘贴到单值系列的价格值或基于 OHLC 的系列的收盘价。
 	 */
 	Magnet,
 }
