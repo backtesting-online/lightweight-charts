@@ -34,21 +34,21 @@ import { Watermark, WatermarkOptions } from './watermark';
 export interface HandleScrollOptions {
 	/**
 	 * Enable scrolling with the mouse wheel.
-	 *
+	 * 启动鼠标滚动
 	 * @defaultValue `true`
 	 */
 	mouseWheel: boolean;
 
 	/**
 	 * Enable scrolling by holding down the left mouse button and moving the mouse.
-	 *
+	 * 通过按住鼠标左键并移动鼠标来启用滚动。
 	 * @defaultValue `true`
 	 */
 	pressedMouseMove: boolean;
 
 	/**
 	 * Enable horizontal touch scrolling.
-	 *
+	 * 启用水平触摸滚动
 	 * When enabled the chart handles touch gestures that would normally scroll the webpage horizontally.
 	 *
 	 * @defaultValue `true`
@@ -57,7 +57,7 @@ export interface HandleScrollOptions {
 
 	/**
 	 * Enable vertical touch scrolling.
-	 *
+	 * 启用垂直触摸滚动。
 	 * When enabled the chart handles touch gestures that would normally scroll the webpage vertically.
 	 *
 	 * @defaultValue `true`
@@ -71,26 +71,27 @@ export interface HandleScrollOptions {
 export interface HandleScaleOptions {
 	/**
 	 * Enable scaling with the mouse wheel.
-	 *
+	 * 启用鼠标滚轮缩放。
 	 * @defaultValue `true`
 	 */
 	mouseWheel: boolean;
 
 	/**
 	 * Enable scaling with pinch/zoom gestures.
-	 *
+	 * 启用缩放与捏合/缩放手势
 	 * @defaultValue `true`
 	 */
 	pinch: boolean;
 
 	/**
 	 * Enable scaling the price and/or time scales by holding down the left mouse button and moving the mouse.
+	 * 通过按住鼠标左键并移动鼠标来缩放价格和/或时间范围。
 	 */
 	axisPressedMouseMove: AxisPressedMouseMoveOptions | boolean;
 
 	/**
 	 * Enable resetting scaling by double-clicking the left mouse button.
-	 *
+	 * 通过双击鼠标左键启用重置缩放。
 	 * @defaultValue `true`
 	 */
 	axisDoubleClickReset: boolean;
@@ -102,6 +103,7 @@ export interface HandleScaleOptions {
 export interface KineticScrollOptions {
 	/**
 	 * Enable kinetic scroll with touch gestures.
+	 * 启用动态滚动与触摸手势
 	 *
 	 * @defaultValue `true`
 	 */
@@ -109,6 +111,7 @@ export interface KineticScrollOptions {
 
 	/**
 	 * Enable kinetic scroll with the mouse.
+	 * 使用鼠标启用动态滚动。
 	 *
 	 * @defaultValue `false`
 	 */
@@ -210,10 +213,12 @@ export interface TrackingModeOptions {
 
 /**
  * Structure describing options of the chart. Series options are to be set separately
+ * 描述图表选项的结构 (series 选项需单独设置)
  */
 export interface ChartOptions {
 	/**
 	 * Width of the chart in pixels
+	 * 图表的宽度，默认为0，使用父容器的宽度
 	 *
 	 * @defaultValue If `0` (default) or none value provided, then a size of the widget will be calculated based its container's size.
 	 */
@@ -221,6 +226,7 @@ export interface ChartOptions {
 
 	/**
 	 * Height of the chart in pixels
+	 * 图表的高度，默认为0，使用父容器的高度
 	 *
 	 * @defaultValue If `0` (default) or none value provided, then a size of the widget will be calculated based its container's size.
 	 */
@@ -228,6 +234,7 @@ export interface ChartOptions {
 
 	/**
 	 * Watermark options.
+	 * 水印选项
 	 *
 	 * A watermark is a background label that includes a brief description of the drawn data. Any text can be added to it.
 	 *
@@ -238,6 +245,7 @@ export interface ChartOptions {
 
 	/**
 	 * Layout options
+	 * 布局选项
 	 */
 	layout: LayoutOptions;
 
@@ -264,47 +272,54 @@ export interface ChartOptions {
 
 	/**
 	 * Time scale options
+	 * 时间刻度选项
 	 */
 	timeScale: TimeScaleOptions;
 
 	/**
 	 * The crosshair shows the intersection of the price and time scale values at any point on the chart.
-	 *
+	 * 十字准线: 十字准线显示图表上任何一点的价格和时间刻度值的交集
 	 */
 	crosshair: CrosshairOptions;
 
 	/**
 	 * A grid is represented in the chart background as a vertical and horizontal lines drawn at the levels of visible marks of price and the time scales.
+	 * 网格线 （水平线 + 垂直线）
 	 */
 	grid: GridOptions;
 
 	/**
 	 * Localization options.
+	 * 本地化选项
 	 */
 	localization: LocalizationOptions;
 
 	/**
 	 * Scroll options, or a boolean flag that enables/disables scrolling
+	 * 滚动选项
 	 */
 	handleScroll: HandleScrollOptions | boolean;
 
 	/**
 	 * Scale options, or a boolean flag that enables/disables scaling
+	 * 缩放选项
 	 */
 	handleScale: HandleScaleOptions | boolean;
 
 	/**
 	 * Kinetic scroll options
+	 * 动力学滚动选项
 	 */
 	kineticScroll: KineticScrollOptions;
 
 	// eslint-disable-next-line tsdoc/syntax
 	/** @inheritDoc TrackingModeOptions
+	 * 跟踪模式选项 (TODO: 先不用看)
 	 */
 	trackingMode: TrackingModeOptions;
 
 }
-
+// 在代码内部使用的图表配置
 export type ChartOptionsInternal =
 	Omit<ChartOptions, 'handleScroll' | 'handleScale' | 'priceScale' | 'layout'>
 	& {

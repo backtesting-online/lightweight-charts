@@ -65,11 +65,13 @@ export type MouseEventHandler = (param: MouseEventParams) => void;
 export interface IChartApi {
 	/**
 	 * Removes the chart object including all DOM elements. This is an irreversible operation, you cannot do anything with the chart after removing it.
+	 * 移除包含所有 DOM 元素的图表对象。这是一个不可逆的操作，移除图表后您将无法对图表执行任何操作。
 	 */
 	remove(): void;
 
 	/**
 	 * Sets fixed size of the chart. By default chart takes up 100% of its container.
+	 * 设置图表的固定大小。默认情况下，图表占据其容器的 100%。
 	 *
 	 * @param width - Target width of the chart.
 	 * @param height - Target height of the chart.
@@ -79,6 +81,7 @@ export interface IChartApi {
 
 	/**
 	 * Creates an area series with specified parameters.
+	 * 创建 area series
 	 *
 	 * @param areaOptions - Customization parameters of the series being created.
 	 * @returns An interface of the created series.
@@ -91,6 +94,7 @@ export interface IChartApi {
 
 	/**
 	 * Creates a baseline series with specified parameters.
+	 * 创建 baseline series
 	 *
 	 * @param baselineOptions - Customization parameters of the series being created.
 	 * @returns An interface of the created series.
@@ -103,6 +107,7 @@ export interface IChartApi {
 
 	/**
 	 * Creates a bar series with specified parameters.
+	 * 创建 bar series
 	 *
 	 * @param barOptions - Customization parameters of the series being created.
 	 * @returns An interface of the created series.
@@ -115,7 +120,7 @@ export interface IChartApi {
 
 	/**
 	 * Creates a candlestick series with specified parameters.
-	 *
+	 * 创建 candlestick series (zale TODO: 看下和 bar series 的区别)
 	 * @param candlestickOptions - Customization parameters of the series being created.
 	 * @returns An interface of the created series.
 	 * @example
@@ -127,7 +132,7 @@ export interface IChartApi {
 
 	/**
 	 * Creates a histogram series with specified parameters.
-	 *
+	 * 创建一个 histogram series (直方图序列, 比如成交量用的就是这个)
 	 * @param histogramOptions - Customization parameters of the series being created.
 	 * @returns An interface of the created series.
 	 * @example
@@ -139,7 +144,7 @@ export interface IChartApi {
 
 	/**
 	 * Creates a line series with specified parameters.
-	 *
+	 * create line series （线图，比如 EMA）
 	 * @param lineOptions - Customization parameters of the series being created.
 	 * @returns An interface of the created series.
 	 * @example
@@ -151,7 +156,7 @@ export interface IChartApi {
 
 	/**
 	 * Removes a series of any type. This is an irreversible operation, you cannot do anything with the series after removing it.
-	 *
+	 * 删除一个 series
 	 * @example
 	 * ```js
 	 * chart.removeSeries(series);
@@ -161,6 +166,7 @@ export interface IChartApi {
 
 	/**
 	 * Subscribe to the chart click event.
+	 * 订阅图表的点击事件
 	 *
 	 * @param handler - Handler to be called on mouse click.
 	 * @example
@@ -180,7 +186,7 @@ export interface IChartApi {
 
 	/**
 	 * Unsubscribe a handler that was previously subscribed using {@link subscribeClick}.
-	 *
+	 * 取消订阅某事件监听器
 	 * @param handler - Previously subscribed handler
 	 * @example
 	 * ```js
@@ -191,6 +197,7 @@ export interface IChartApi {
 
 	/**
 	 * Subscribe to the crosshair move event.
+	 * 订阅十字准线移动事件。
 	 *
 	 * @param handler - Handler to be called on crosshair move.
 	 * @example
@@ -210,7 +217,7 @@ export interface IChartApi {
 
 	/**
 	 * Unsubscribe a handler that was previously subscribed using {@link subscribeCrosshairMove}.
-	 *
+	 * 取消订阅以前订阅的十字准线移动事件
 	 * @param handler - Previously subscribed handler
 	 * @example
 	 * ```js
@@ -221,14 +228,16 @@ export interface IChartApi {
 
 	/**
 	 * Returns API to manipulate a price scale.
+	 * 返回 API 以操纵价格刻度
 	 *
-	 * @param priceScaleId - ID of the price scale.
-	 * @returns Price scale API.
+	 * @param priceScaleId - ID of the price scale.  价格刻度的ID
+	 * @returns Price scale API. 价格缩放 API
 	 */
 	priceScale(priceScaleId?: string): IPriceScaleApi;
 
 	/**
 	 * Returns API to manipulate the time scale
+	 * 返回 API 以操作时间刻度
 	 *
 	 * @returns Target API
 	 */
@@ -236,6 +245,7 @@ export interface IChartApi {
 
 	/**
 	 * Applies new options to the chart
+	 * 添加新的选项配置到图表上
 	 *
 	 * @param options - Any subset of options.
 	 */
@@ -243,6 +253,7 @@ export interface IChartApi {
 
 	/**
 	 * Returns currently applied options
+	 * 返回当前使用的选项配置
 	 *
 	 * @returns Full set of currently applied options, including defaults
 	 */
@@ -250,7 +261,7 @@ export interface IChartApi {
 
 	/**
 	 * Make a screenshot of the chart with all the elements excluding crosshair.
-	 *
+	 * 制作图表的屏幕截图，其中包含除十字准线之外的所有元素。
 	 * @returns A canvas with the chart drawn on. Any `Canvas` methods like `toDataURL()` or `toBlob()` can be used to serialize the result.
 	 */
 	takeScreenshot(): HTMLCanvasElement;

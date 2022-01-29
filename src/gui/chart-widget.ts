@@ -34,6 +34,9 @@ export interface MouseEventParamsImpl {
 
 export type MouseEventParamsImplSupplier = () => MouseEventParamsImpl;
 
+/**
+ * 图表控件
+ */
 export class ChartWidget implements IDestroyable {
 	private readonly _options: ChartOptionsInternal;
 	private _paneWidgets: PaneWidget[] = [];

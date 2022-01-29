@@ -44,15 +44,19 @@ export const enum PriceScaleMode {
 	Normal,
 	/**
 	 * Price scale shows prices. Price range changes logarithmically.
+	 * 价格范围按对数变化
 	 */
 	Logarithmic,
 	/**
 	 * Price scale shows percentage values according the first visible value of the price scale.
 	 * The first visible value is 0% in this mode.
+	 * 价格刻度根据价格刻度的第一个可见值显示百分比值。
+     * 在此模式下，第一个可见值为 0%
 	 */
 	Percentage,
 	/**
 	 * The same as percentage mode, but the first value is moved to 100.
+	 * 与百分比模式相同，但第一个值将移至 100。
 	 */
 	IndexedTo100,
 }
@@ -91,11 +95,12 @@ export interface PriceScaleMargins {
 export type PriceAxisPosition = 'left' | 'right' | 'none';
 
 /** Structure that describes price scale options */
+// 描述价格缩放选项
 export interface PriceScaleOptions {
 	/**
 	 * Autoscaling is a feature that automatically adjusts a price scale to fit the visible range of data.
 	 * Note that overlay price scales are always auto-scaled.
-	 *
+	 * 是否开启自动缩放.
 	 * @defaultValue `true`
 	 */
 	autoScale: boolean;
@@ -110,21 +115,21 @@ export interface PriceScaleOptions {
 	/**
 	 * Invert the price scale, so that a upwards trend is shown as a downwards trend and vice versa.
 	 * Affects both the price scale and the data on the chart.
-	 *
+	 * 是否反转刻度
 	 * @defaultValue `false`
 	 */
 	invertScale: boolean;
 
 	/**
 	 * Align price scale labels to prevent them from overlapping.
-	 *
+	 * 对齐价格刻度标签，防止它们重叠。
 	 * @defaultValue `true`
 	 */
 	alignLabels: boolean;
 
 	/**
 	 * Price scale's position on the chart.
-	 *
+	 * 价格刻度在图表上的位置 (废弃的API)
 	 * @deprecated Use options for different price scales instead
 	 * @internal
 	 */
@@ -132,7 +137,7 @@ export interface PriceScaleOptions {
 
 	/**
 	 * Price scale margins.
-	 *
+	 * 价格缩放的外边距
 	 * @defaultValue `{ bottom: 0.1, top: 0.2 }`
 	 * @example
 	 * ```js
@@ -148,7 +153,7 @@ export interface PriceScaleOptions {
 
 	/**
 	 * Set true to draw a border between the price scale and the chart area.
-	 *
+	 * 在价格刻度和图表区之间绘制边框
 	 * @defaultValue `true`
 	 */
 	borderVisible: boolean;
@@ -162,21 +167,21 @@ export interface PriceScaleOptions {
 
 	/**
 	 * Show top and bottom corner labels only if entire text is visible.
-	 *
+	 * 仅当整个文本可见时，才显示上角和下角标签。
 	 * @defaultValue `false`
 	 */
 	entireTextOnly: boolean;
 
 	/**
 	 * Indicates if this price scale visible. Ignored by overlay price scales.
-	 *
+	 * 指示此价格等级是否可见。被叠加价格尺度所忽略。
 	 * @defaultValue `true` for the right price scale and `false` for the left
 	 */
 	visible: boolean;
 
 	/**
 	 * Draw small horizontal line on price axis labels.
-	 *
+	 * 在价格轴标签上绘制小水平线。
 	 * @defaultValue `true`
 	 */
 	drawTicks: boolean;

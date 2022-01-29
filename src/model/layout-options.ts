@@ -52,6 +52,7 @@ export type Background = SolidColor | VerticalGradientColor;
 export interface LayoutOptions {
 	/**
 	 * Chart and scales background color.
+	 * 图表和缩放区域的背景色
 	 *
 	 * @defaultValue `{ type: ColorType.Solid, color: '#FFFFFF' }`
 	 */

@@ -141,6 +141,7 @@ export function migrateLayoutOptions(options: DeepPartial<ChartOptions>): void {
 	/* eslint-enable deprecation/deprecation */
 }
 
+// 转换成内部使用的参数
 function toInternalOptions(options: DeepPartial<ChartOptions>): DeepPartial<ChartOptionsInternal> {
 	migrateHandleScaleScrollOptions(options);
 	migratePriceScaleOptions(options);
@@ -163,10 +164,12 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 	private readonly _timeScaleApi: TimeScaleApi;
 
 	public constructor(container: HTMLElement, options?: DeepPartial<ChartOptions>) {
+		// 将参数转换成内部使用的参数
 		const internalOptions = (options === undefined) ?
 			clone(chartOptionsDefaults) :
 			merge(clone(chartOptionsDefaults), toInternalOptions(options)) as ChartOptionsInternal;
 
+		//
 		this._chartWidget = new ChartWidget(container, internalOptions);
 
 		this._chartWidget.clicked().subscribe(

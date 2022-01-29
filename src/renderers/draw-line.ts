@@ -39,22 +39,27 @@ export interface LinePoint {
 export const enum LineStyle {
 	/**
 	 * A solid line.
+	 * 实线。
 	 */
 	Solid = 0,
 	/**
 	 * A dotted line.
+	 * 点缀。
 	 */
 	Dotted = 1,
 	/**
 	 * A dashed line.
+	 * 虚线
 	 */
 	Dashed = 2,
 	/**
 	 * A dashed line with bigger dashes.
+	 * 带有较大破折号的虚线。
 	 */
 	LargeDashed = 3,
 	/**
 	 * A dottled line with more space between dots.
+	 * 一条斑驳的线，点之间有更多的空间。
 	 */
 	SparseDotted = 4,
 }

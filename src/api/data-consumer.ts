@@ -191,6 +191,7 @@ export interface SeriesDataItemTypeMap {
 	Histogram: HistogramData | WhitespaceData;
 }
 
+//  更新数据的消费者
 export interface DataUpdatesConsumer<TSeriesType extends SeriesType> {
 	applyNewData(series: Series<TSeriesType>, data: SeriesDataItemTypeMap[TSeriesType][]): void;
 	updateData(series: Series<TSeriesType>, data: SeriesDataItemTypeMap[TSeriesType]): void;

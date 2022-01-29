@@ -861,6 +861,7 @@ export interface SeriesPartialOptionsMap {
 
 /**
  * Represents a type of series.
+ * 序列的一种类型
  *
  * @see {@link SeriesOptionsMap}
  */

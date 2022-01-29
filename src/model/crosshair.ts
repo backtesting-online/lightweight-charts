@@ -35,6 +35,7 @@ export type TimeAndCoordinateProvider = () => CrosshairTimeAndCoordinate;
 
 /**
  * Represents the crosshair mode.
+ * 十字准线模式
  */
 export const enum CrosshairMode {
 	/**
@@ -85,20 +86,21 @@ export interface CrosshairLineOptions {
 
 	/**
 	 * Display the crosshair label on the relevant scale.
-	 *
+	 * 在相关刻度上显示十字准线标签。
 	 * @defaultValue `true`
 	 */
 	labelVisible: boolean;
 
 	/**
 	 * Crosshair label background color.
-	 *
+	 * 十字准线标签背景色
 	 * @defaultValue `'#4c525e'`
 	 */
 	labelBackgroundColor: string;
 }
 
 /** Structure describing crosshair options  */
+// 十字准线
 export interface CrosshairOptions {
 	/**
 	 * Crosshair mode
@@ -109,11 +111,13 @@ export interface CrosshairOptions {
 
 	/**
 	 * Vertical line options.
+	 * 垂直线
 	 */
 	vertLine: CrosshairLineOptions;
 
 	/**
 	 * Horizontal line options.
+	 * 水平线
 	 */
 	horzLine: CrosshairLineOptions;
 }

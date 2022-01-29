@@ -9,6 +9,7 @@ import { priceScaleOptionsDefaults } from './price-scale-options-defaults';
 import { timeScaleOptionsDefaults } from './time-scale-options-defaults';
 import { watermarkOptionsDefaults } from './watermark-options-defaults';
 
+// 图表 Option 默认值
 export const chartOptionsDefaults: ChartOptionsInternal = {
 	width: 0,
 	height: 0,
