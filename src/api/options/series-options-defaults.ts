@@ -87,6 +87,7 @@ export const histogramStyleDefaults: HistogramStyleOptions = {
 	base: 0,
 };
 
+// series options 的默认公共参数
 export const seriesOptionsDefaults: SeriesOptionsCommon = {
 	title: '',
 	visible: true,

@@ -133,11 +133,13 @@ export interface SeriesChanges {
 export interface DataUpdateResponse {
 	/**
 	 * Contains updates for all _changed_ series (if series data doesn't changed then it will not be here)
+	 * 包含所有 _changed_ 系列的更新（如果系列数据未更改，则不会在此处）
 	 */
 	series: Map<Series, SeriesChanges>;
 
 	/**
 	 * Contains optional time scale points
+	 * 包含可选的时间刻度点
 	 */
 	timeScale: TimeScaleChanges;
 }
