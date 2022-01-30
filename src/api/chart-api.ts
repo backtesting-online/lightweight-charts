@@ -153,11 +153,15 @@ function toInternalOptions(options: DeepPartial<ChartOptions>): DeepPartial<Char
 export type IPriceScaleApiProvider = Pick<IChartApi, 'priceScale'>;
 
 export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
+	// 图表控件
 	private _chartWidget: ChartWidget;
+	// 数据层
 	private _dataLayer: DataLayer = new DataLayer();
+	// series Api -> series 的映射
 	private readonly _seriesMap: Map<SeriesApi<SeriesType>, Series> = new Map();
+	// series -> series Api 的映射
 	private readonly _seriesMapReversed: Map<Series, SeriesApi<SeriesType>> = new Map();
-
+	//
 	private readonly _clickedDelegate: Delegate<MouseEventParams> = new Delegate();
 	private readonly _crosshairMovedDelegate: Delegate<MouseEventParams> = new Delegate();
 
@@ -172,6 +176,7 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 		// 生成图表组件
 		this._chartWidget = new ChartWidget(container, internalOptions);
 
+		//
 		this._chartWidget.clicked().subscribe(
 			(paramSupplier: MouseEventParamsImplSupplier) => {
 				if (this._clickedDelegate.hasListeners()) {
