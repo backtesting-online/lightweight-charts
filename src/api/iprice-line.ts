@@ -2,6 +2,7 @@ import { PriceLineOptions } from '../model/price-line-options';
 
 /**
  * Represents the interface for interacting with price lines.
+ * 价格线接口
  */
 export interface IPriceLine {
 	/**

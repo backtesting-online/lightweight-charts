@@ -88,6 +88,7 @@ export interface LineData extends SingleValueData {
 
 /**
  * Structure describing a single item of data for histogram series
+ * 直方图数据
  */
 export interface HistogramData extends SingleValueData {
 	/**
@@ -135,6 +136,7 @@ export interface BarData extends OhlcData {
 
 /**
  * Structure describing a single item of data for candlestick series
+ * 蜡烛条数据
  */
 export interface CandlestickData extends OhlcData {
 	/**
@@ -147,6 +149,7 @@ export interface CandlestickData extends OhlcData {
 	borderColor?: string;
 	/**
 	 * Optional wick color value for certain data item. If missed, color from options is used
+	 * 灯芯颜色
 	 */
 	wickColor?: string;
 }

@@ -17,6 +17,7 @@ import { IPriceScaleApi } from './iprice-scale-api';
 
 /**
  * Represents a range of bars and the number of bars outside the range.
+ * 表示条形范围和范围外的条形数
  */
 // actually range might be either exist or not
 // but to avoid hard-readable type let's say every part of range is optional
@@ -38,6 +39,7 @@ export interface BarsInfo extends Partial<Range<Time>> {
 
 /**
  * Represents the interface for interacting with series.
+ * 与 Series 交互的接口
  */
 export interface ISeriesApi<TSeriesType extends SeriesType> {
 	/**
@@ -49,6 +51,7 @@ export interface ISeriesApi<TSeriesType extends SeriesType> {
 
 	/**
 	 * Converts specified series price to pixel coordinate according to the series price scale
+	 * 价格到坐标的转换
 	 *
 	 * @param price - Input price to be converted
 	 * @returns Pixel coordinate of the price level on the chart
@@ -57,6 +60,7 @@ export interface ISeriesApi<TSeriesType extends SeriesType> {
 
 	/**
 	 * Converts specified coordinate to price value according to the series price scale
+	 * 坐标到价格的转换
 	 *
 	 * @param coordinate - Input coordinate to be converted
 	 * @returns Price value of the coordinate on the chart
@@ -66,6 +70,8 @@ export interface ISeriesApi<TSeriesType extends SeriesType> {
 	/**
 	 * Returns bars information for the series in the provided [logical range](/time-scale.md#logical-range) or `null`, if no series data has been found in the requested range.
 	 * This method can be used, for instance, to implement downloading historical data while scrolling to prevent a user from seeing empty space.
+	 * 返回 series 的 bar 信息
+	 * 在 onVisibleLogicalRangeChanged 中使用可以用于加载历史数据
 	 *
 	 * @param range - The [logical range](/time-scale.md#logical-range) to retrieve info for.
 	 * @returns The bars info for the given logical range.
@@ -93,6 +99,7 @@ export interface ISeriesApi<TSeriesType extends SeriesType> {
 	 * Applies new options to the existing series
 	 * You can set options initially when you create series or use the `applyOptions` method of the series to change the existing options.
 	 * Note that you can only pass options you want to change.
+	 * 应用新的 Options
 	 *
 	 * @param options - Any subset of options.
 	 */
@@ -160,6 +167,7 @@ export interface ISeriesApi<TSeriesType extends SeriesType> {
 
 	/**
 	 * Allows to set/replace all existing series markers with new ones.
+	 * 设置新的标记
 	 *
 	 * @param data - An array of series markers. This array should be sorted by time. Several markers with same time are allowed.
 	 * @example
@@ -202,6 +210,7 @@ export interface ISeriesApi<TSeriesType extends SeriesType> {
 
 	/**
 	 * Creates a new price line
+	 * 创建价格线
 	 *
 	 * @param options - Any subset of options.
 	 * @example
@@ -220,6 +229,7 @@ export interface ISeriesApi<TSeriesType extends SeriesType> {
 
 	/**
 	 * Removes the price line that was created before.
+	 * 移除价格线
 	 *
 	 * @param line - A line to remove.
 	 * @example
@@ -232,6 +242,7 @@ export interface ISeriesApi<TSeriesType extends SeriesType> {
 
 	/**
 	 * Return current series type.
+	 * 获取当前 series 的类型
 	 *
 	 * @returns Type of the series.
 	 * @example

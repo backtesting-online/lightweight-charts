@@ -3,11 +3,14 @@ import { AutoscaleInfo } from './series-options';
 
 /**
  * Represents the margin used when updating a price scale.
+ * 更新一个价格刻度时用的边距
  */
 export interface AutoScaleMargins {
 	/** The number of pixels for bottom margin */
+	// 下边距的像素数
 	below: number;
 	/** The number of pixels for top margin */
+	// 上边距的像素数
 	above: number;
 }
 

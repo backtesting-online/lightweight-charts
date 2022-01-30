@@ -26,6 +26,7 @@ export interface CandlestickStyleOptions {
 
 	/**
 	 * Enable high and low prices candle wicks.
+	 * 启用高价和低价蜡烛芯
 	 *
 	 * @defaultValue `true`
 	 */
@@ -120,6 +121,7 @@ export { LastPriceAnimationMode as LasPriceAnimationMode };
 
 /**
  * Represents style options for a bar series.
+ * Bar 条的样式选项
  */
 export interface BarStyleOptions {
 	/**
@@ -138,6 +140,7 @@ export interface BarStyleOptions {
 
 	/**
 	 * Show open lines on bars.
+	 * 在条形图上显示空线。
 	 *
 	 * @defaultValue `true`
 	 */
@@ -145,6 +148,7 @@ export interface BarStyleOptions {
 
 	/**
 	 * Show bars as sticks.
+	 * 将条形显示为棍子。
 	 *
 	 * @defaultValue `true`
 	 */
@@ -218,10 +222,12 @@ export interface LineStyleOptions {
 
 /**
  * Represents style options for an area series.
+ * Area Series 的 Options
  */
 export interface AreaStyleOptions {
 	/**
 	 * Color of the top part of the area.
+	 * 区域顶部的颜色
 	 *
 	 * @defaultValue `'rgba( 46, 220, 135, 0.4)'`
 	 */
@@ -229,6 +235,7 @@ export interface AreaStyleOptions {
 
 	/**
 	 * Color of the bottom part of the area.
+	 * 区域底部的颜色
 	 *
 	 * @defaultValue `'rgba( 40, 221, 100, 0)'`
 	 */
@@ -236,6 +243,7 @@ export interface AreaStyleOptions {
 
 	/**
 	 * Line color.
+	 * 线条颜色
 	 *
 	 * @defaultValue `'#33D778'`
 	 */
@@ -243,6 +251,7 @@ export interface AreaStyleOptions {
 
 	/**
 	 * Line style.
+	 * 线条样式
 	 *
 	 * @defaultValue {@link LineStyle.Solid}
 	 */
@@ -257,6 +266,7 @@ export interface AreaStyleOptions {
 
 	/**
 	 * Line type.
+	 * 以像素为单位的线宽
 	 *
 	 * @defaultValue {@link LineType.Simple}
 	 */
@@ -264,24 +274,28 @@ export interface AreaStyleOptions {
 
 	/**
 	 * Show the crosshair marker.
+	 * 显示十字准线标记
 	 *
 	 * @defaultValue `true`
 	 */
 	crosshairMarkerVisible: boolean;
 	/**
 	 * Crosshair marker radius in pixels.
+	 * 十字准线标记半径
 	 *
 	 * @defaultValue `4`
 	 */
 	crosshairMarkerRadius: number;
 	/**
 	 * Crosshair marker border color. An empty string falls back to the the color of the series under the crosshair.
+	 * 十字线标记边框颜色。空字符串回落到十字准线下系列的颜色。
 	 *
 	 * @defaultValue `''`
 	 */
 	crosshairMarkerBorderColor: string;
 	/**
 	 * The crosshair marker background color. An empty string falls back to the the color of the series under the crosshair.
+	 * 十字准线标记背景颜色
 	 *
 	 * @defaultValue `''`
 	 */
@@ -289,6 +303,7 @@ export interface AreaStyleOptions {
 
 	/**
 	 * Last price animation mode.
+	 * 最后价格动画模式 (默认关闭)
 	 *
 	 * @defaultValue {@link LastPriceAnimationMode.Disabled}
 	 */
@@ -297,6 +312,7 @@ export interface AreaStyleOptions {
 
 /**
  * Represents a type of priced base value of baseline series type.
+ * 表示基准系列类型的定价基值类型
  */
 export interface BaseValuePrice {
 	/**
@@ -317,6 +333,7 @@ export type BaseValueType = BaseValuePrice;
 
 /**
  * Represents style options for a baseline series.
+ * base line 样式选项
  */
 export interface BaselineStyleOptions {
 	/**
@@ -547,15 +564,18 @@ export interface PriceRange {
 
 /**
  * Represents information used to update a price scale.
+ * 更新价格刻度的信息
  */
 export interface AutoscaleInfo {
 	/**
 	 * Price range.
+	 * 价格范围
 	 */
 	priceRange: PriceRange;
 
 	/**
 	 * Scale margins.
+	 * 缩放边距 zale TODO: 这是啥？
 	 */
 	margins?: AutoScaleMargins;
 }

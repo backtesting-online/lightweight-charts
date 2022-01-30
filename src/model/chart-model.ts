@@ -35,6 +35,7 @@ export interface HandleScrollOptions {
 	/**
 	 * Enable scrolling with the mouse wheel.
 	 * 启动鼠标滚动
+	 *
 	 * @defaultValue `true`
 	 */
 	mouseWheel: boolean;
@@ -42,6 +43,7 @@ export interface HandleScrollOptions {
 	/**
 	 * Enable scrolling by holding down the left mouse button and moving the mouse.
 	 * 通过按住鼠标左键并移动鼠标来启用滚动。
+	 *
 	 * @defaultValue `true`
 	 */
 	pressedMouseMove: boolean;
@@ -72,6 +74,7 @@ export interface HandleScaleOptions {
 	/**
 	 * Enable scaling with the mouse wheel.
 	 * 启用鼠标滚轮缩放。
+	 *
 	 * @defaultValue `true`
 	 */
 	mouseWheel: boolean;
@@ -79,6 +82,7 @@ export interface HandleScaleOptions {
 	/**
 	 * Enable scaling with pinch/zoom gestures.
 	 * 启用缩放与捏合/缩放手势
+	 *
 	 * @defaultValue `true`
 	 */
 	pinch: boolean;
@@ -92,6 +96,7 @@ export interface HandleScaleOptions {
 	/**
 	 * Enable resetting scaling by double-clicking the left mouse button.
 	 * 通过双击鼠标左键启用重置缩放。
+	 *
 	 * @defaultValue `true`
 	 */
 	axisDoubleClickReset: boolean;
@@ -127,10 +132,12 @@ type HandleScaleOptionsInternal =
 
 /**
  * Represents options for how the time and price axes react to mouse movements.
+ * 时间轴和价格轴如何响应鼠标移动的选项
  */
 export interface AxisPressedMouseMoveOptions {
 	/**
 	 * Enable scaling the time axis by holding down the left mouse button and moving the mouse.
+	 * 通过按住鼠标左键并移动鼠标来启用缩放时间轴
 	 *
 	 * @defaultValue `true`
 	 */
@@ -138,6 +145,7 @@ export interface AxisPressedMouseMoveOptions {
 
 	/**
 	 * Enable scaling the price axis by holding down the left mouse button and moving the mouse.
+	 * 通过按住鼠标左键并移动鼠标来启用缩放价格轴
 	 *
 	 * @defaultValue `true`
 	 */
