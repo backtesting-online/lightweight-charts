@@ -78,7 +78,11 @@ export interface PricedValue {
 	y: Coordinate;
 }
 
-/** Defines margins of the price scale. */
+/**
+ * Defines margins of the price scale.
+ * 定义价格范围的边距
+ *
+ * */
 export interface PriceScaleMargins {
 	/**
 	 * Top margin in percentages. Must be greater or equal to 0 and less than 1.

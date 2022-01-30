@@ -10,6 +10,7 @@ export type SeriesMarkerShape = 'circle' | 'square' | 'arrowUp' | 'arrowDown';
 
 /**
  * Represents a series marker.
+ * series 的标记
  */
 export interface SeriesMarker<TimeType> {
 	/**

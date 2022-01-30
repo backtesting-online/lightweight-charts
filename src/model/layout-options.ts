@@ -28,6 +28,7 @@ export interface SolidColor {
 
 /**
  * Represents a vertical gradient of two colors.
+ * 表示两种颜色的垂直渐变
  */
 export interface VerticalGradientColor {
 	/**

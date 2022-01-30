@@ -22,6 +22,7 @@ import { ITimeScaleApi } from './itime-scale-api';
 
 /**
  * Represents a mouse event.
+ * 表示鼠标事件。
  */
 export interface MouseEventParams {
 	/**
@@ -38,6 +39,7 @@ export interface MouseEventParams {
 	point?: Point;
 	/**
 	 * Prices of all series at the location of the event in the chart.
+	 * 图表中事件所在位置的所有系列的价格。
 	 *
 	 * Keys of the map are {@link ISeriesApi} instances. Values are prices.
 	 * Each price is a number for line, area, and histogram series or a OHLC object for candlestick and bar series.

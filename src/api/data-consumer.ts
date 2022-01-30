@@ -41,6 +41,7 @@ export function isUTCTimestamp(time: Time): time is UTCTimestamp {
 
 /**
  * Represents a whitespace data item, which is a data point without a value.
+ * 空白数据点，只有时间
  *
  * @example
  * ```js
@@ -165,6 +166,7 @@ export function isFulfilledData(data: SeriesDataItemTypeMap[SeriesType]): data i
 
 /**
  * Represents the type of data that a series contains.
+ * 系列包含的数据类型
  *
  * For example a bar series contains {@link BarData} or {@link WhitespaceData}.
  */

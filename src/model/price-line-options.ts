@@ -36,6 +36,7 @@ export interface PriceLineOptions {
 	lineVisible: boolean;
 	/**
 	 * Display the current price value in on the price scale.
+	 * 在价格刻度上显示当前价格值
 	 *
 	 * @defaultValue `true`
 	 */

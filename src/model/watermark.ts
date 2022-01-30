@@ -6,7 +6,9 @@ import { IPriceAxisView } from '../views/price-axis/iprice-axis-view';
 import { ChartModel } from './chart-model';
 import { DataSource } from './data-source';
 
-/** Watermark options. */
+/**
+ * Watermark options.
+*/
 export interface WatermarkOptions {
 	/**
 	 * Watermark color.

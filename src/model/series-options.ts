@@ -450,6 +450,7 @@ export interface HistogramStyleOptions {
 /**
  * Represents series value formatting options.
  * The precision and minMove properties allow wide customization of formatting.
+ * 表示系列值格式选项。 precision 和 minMove 属性允许广泛自定义格式。
  *
  * @example
  * `minMove=0.01`, `precision` is not specified - prices will change like 1.13, 1.14, 1.15 etc.
@@ -470,6 +471,7 @@ export interface PriceFormatBuiltIn {
 	/**
 	 * Number of digits after the decimal point.
 	 * If it is not set, then its value is calculated automatically based on minMove.
+	 * 精度，表示小数点后的位数
 	 *
 	 * @defaultValue `2` if both {@link minMove} and {@link precision} are not provided, calculated automatically based on {@link minMove} otherwise.
 	 */
@@ -477,6 +479,7 @@ export interface PriceFormatBuiltIn {
 
 	/**
 	 * The minimum possible step size for price value movement. This value shouldn't have more decimal digits than the precision.
+	 * 价格价值变动的最小可能步长
 	 *
 	 * @defaultValue `0.01`
 	 */
@@ -590,6 +593,7 @@ type AutoscaleInfoProvider = (baseImplementation: () => AutoscaleInfo | null) =>
 
 /**
  * Represents options common for all types of series
+ * 所有类型系列通用的选项
  */
 export interface SeriesOptionsCommon {
 	/**
@@ -857,6 +861,7 @@ export interface SeriesOptionsMap {
 
 /**
  * Represents the type of partial options for each series type.
+ * 每个系列类型的部分选项的类型。
  *
  * For example a bar series has options represented by {@link BarSeriesPartialOptions}.
  */
