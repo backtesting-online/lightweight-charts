@@ -20,6 +20,7 @@ export type Time = UTCTimestamp | BusinessDay | string;
 
 /**
  * Check if a time value is a business day object.
+ * 检测是否是 business day 对象
  *
  * @param time - The time to check.
  * @returns `true` if `time` is a {@link BusinessDay} object, false otherwise.

@@ -157,6 +157,7 @@ export interface BarStyleOptions {
 
 /**
  * Represents style options for a line series.
+ * 线条系列的样式选项
  */
 export interface LineStyleOptions {
 	/**

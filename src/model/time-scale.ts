@@ -111,6 +111,7 @@ export interface TimeScaleOptions {
 	/**
 	 * The space between bars in pixels.
 	 * 条形之间的间距（以像素为单位）
+	 *
 	 * @defaultValue `6`
 	 */
 	barSpacing: number;
@@ -118,6 +119,7 @@ export interface TimeScaleOptions {
 	/**
 	 * The minimum space between bars in pixels.
 	 * 条形之间的最小间距（以像素为单位）
+	 *
 	 * @defaultValue `0.5`
 	 */
 	minBarSpacing: number;
@@ -125,6 +127,7 @@ export interface TimeScaleOptions {
 	/**
 	 * Prevent scrolling to the left of the first bar.
 	 * 防止滚动到第一个栏的左侧
+	 *
 	 * @defaultValue `false`
 	 */
 	fixLeftEdge: boolean;
@@ -132,6 +135,7 @@ export interface TimeScaleOptions {
 	/**
 	 * Prevent scrolling to the right of the most recent bar.
 	 * 阻止滚动到最新栏的右侧
+	 *
 	 * @defaultValue `false`
 	 */
 	fixRightEdge: boolean;
@@ -139,6 +143,7 @@ export interface TimeScaleOptions {
 	/**
 	 * Prevent changing the visible time range during chart resizing.
 	 * 防止在调整图表大小期间更改可见时间范围
+	 *
 	 * @defaultValue `false`
 	 */
 	lockVisibleTimeRangeOnResize: boolean;
@@ -146,6 +151,7 @@ export interface TimeScaleOptions {
 	/**
 	 * Prevent the hovered bar from moving when scrolling.
 	 * 时间滚动时是否固定右边
+	 *
 	 * @defaultValue `false`
 	 */
 	rightBarStaysOnScroll: boolean;
@@ -153,6 +159,7 @@ export interface TimeScaleOptions {
 	/**
 	 * Show the time scale border.
 	 * 显示时间刻度边框。
+	 *
 	 * @defaultValue `true`
 	 */
 	borderVisible: boolean;
@@ -174,6 +181,7 @@ export interface TimeScaleOptions {
 	/**
 	 * Show the time, not just the date, in the time scale and vertical crosshair label.
 	 * 显示时间，不仅仅是日期
+	 *
 	 * @defaultValue `false`
 	 */
 	timeVisible: boolean;
@@ -181,6 +189,7 @@ export interface TimeScaleOptions {
 	/**
 	 * Show seconds in the time scale and vertical crosshair label in `hh:mm:ss` format for intraday data.
 	 * 显示秒刻度
+	 *
 	 * @defaultValue `true`
 	 */
 	secondsVisible: boolean;
@@ -192,6 +201,7 @@ export interface TimeScaleOptions {
 	 *
 	 * 添加新数据时，将可见范围向右移动（未来）新柱的数量。
      * 请注意，这仅适用于最后一个柱线可见的情况。
+	 *
 	 * @defaultValue `true`
 	 */
 	shiftVisibleRangeOnNewBar: boolean;
@@ -199,6 +209,7 @@ export interface TimeScaleOptions {
 	/**
 	 * Tick marks formatter can be used to customize tick marks labels on the time axis.
 	 * 刻度线格式化程序可用于自定义时间轴上的刻度线标签
+	 *
 	 * @defaultValue `undefined`
 	 */
 	tickMarkFormatter?: TickMarkFormatter;

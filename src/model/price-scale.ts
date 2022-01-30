@@ -102,6 +102,7 @@ export interface PriceScaleOptions {
 	 * Autoscaling is a feature that automatically adjusts a price scale to fit the visible range of data.
 	 * Note that overlay price scales are always auto-scaled.
 	 * 是否开启自动缩放.
+	 *
 	 * @defaultValue `true`
 	 */
 	autoScale: boolean;
@@ -117,6 +118,7 @@ export interface PriceScaleOptions {
 	 * Invert the price scale, so that a upwards trend is shown as a downwards trend and vice versa.
 	 * Affects both the price scale and the data on the chart.
 	 * 是否反转刻度
+	 *
 	 * @defaultValue `false`
 	 */
 	invertScale: boolean;
@@ -124,6 +126,7 @@ export interface PriceScaleOptions {
 	/**
 	 * Align price scale labels to prevent them from overlapping.
 	 * 对齐价格刻度标签，防止它们重叠。
+	 *
 	 * @defaultValue `true`
 	 */
 	alignLabels: boolean;
@@ -131,6 +134,7 @@ export interface PriceScaleOptions {
 	/**
 	 * Price scale's position on the chart.
 	 * 价格刻度在图表上的位置 (废弃的API)
+	 *
 	 * @deprecated Use options for different price scales instead
 	 * @internal
 	 */
@@ -139,6 +143,7 @@ export interface PriceScaleOptions {
 	/**
 	 * Price scale margins.
 	 * 价格缩放的外边距
+	 *
 	 * @defaultValue `{ bottom: 0.1, top: 0.2 }`
 	 * @example
 	 * ```js
@@ -155,6 +160,7 @@ export interface PriceScaleOptions {
 	/**
 	 * Set true to draw a border between the price scale and the chart area.
 	 * 在价格刻度和图表区之间绘制边框
+	 *
 	 * @defaultValue `true`
 	 */
 	borderVisible: boolean;
@@ -169,6 +175,7 @@ export interface PriceScaleOptions {
 	/**
 	 * Show top and bottom corner labels only if entire text is visible.
 	 * 仅当整个文本可见时，才显示上角和下角标签。
+	 *
 	 * @defaultValue `false`
 	 */
 	entireTextOnly: boolean;
@@ -176,6 +183,7 @@ export interface PriceScaleOptions {
 	/**
 	 * Indicates if this price scale visible. Ignored by overlay price scales.
 	 * 指示此价格等级是否可见。被叠加价格尺度所忽略。
+	 *
 	 * @defaultValue `true` for the right price scale and `false` for the left
 	 */
 	visible: boolean;
@@ -183,6 +191,7 @@ export interface PriceScaleOptions {
 	/**
 	 * Draw small horizontal line on price axis labels.
 	 * 在价格轴标签上绘制小水平线。
+	 *
 	 * @defaultValue `true`
 	 */
 	drawTicks: boolean;

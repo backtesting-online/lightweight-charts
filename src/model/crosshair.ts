@@ -89,6 +89,7 @@ export interface CrosshairLineOptions {
 	/**
 	 * Display the crosshair label on the relevant scale.
 	 * 在相关刻度上显示十字准线标签。
+	 *
 	 * @defaultValue `true`
 	 */
 	labelVisible: boolean;
@@ -96,6 +97,7 @@ export interface CrosshairLineOptions {
 	/**
 	 * Crosshair label background color.
 	 * 十字准线标签背景色
+	 *
 	 * @defaultValue `'#4c525e'`
 	 */
 	labelBackgroundColor: string;
