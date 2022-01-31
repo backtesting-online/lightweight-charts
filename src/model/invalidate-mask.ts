@@ -1,5 +1,6 @@
 import { LogicalRange } from '../model/time-data';
 
+// 失效级别
 export const enum InvalidationLevel {
 	None = 0,
 	Cursor = 1,

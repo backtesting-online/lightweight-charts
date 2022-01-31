@@ -346,71 +346,94 @@ interface GradientColorsCache {
 }
 
 export class ChartModel implements IDestroyable {
+	// chart options
 	private readonly _options: ChartOptionsInternal;
+	// 无效处理器？TODO:
 	private readonly _invalidateHandler: InvalidateHandler;
-
+	// 价格轴渲染器选项的 Provider 的实例
 	private readonly _rendererOptionsProvider: PriceAxisRendererOptionsProvider;
-
+	// 时间刻度实例
 	private readonly _timeScale: TimeScale;
+	// 窗格实例列表
 	private readonly _panes: Pane[] = [];
+	// 十字准星实例
 	private readonly _crosshair: Crosshair;
+	// 磁铁实例 TODO: 干嘛用的？
 	private readonly _magnet: Magnet;
+	// 水印实例
 	private readonly _watermark: Watermark;
-
+	// series 实例列表
 	private _serieses: Series[] = [];
-
+	// chart 宽度
 	private _width: number = 0;
+	// 初始时间滚动位置 TODO:
 	private _initialTimeScrollPos: number | null = null;
+	// hover 来源 TODO:
 	private _hoveredSource: HoveredSource | null = null;
+	// 价格刻度选项监听器
 	private readonly _priceScalesOptionsChanged: Delegate = new Delegate();
+	// 十字准星移动监听器
 	private _crosshairMoved: Delegate<TimePointIndex | null, Point | null> = new Delegate();
-
+	// 顶部背景颜色
 	private _backgroundTopColor: string;
+	// 底部背景颜色
 	private _backgroundBottomColor: string;
+	// 缓存的渐变颜色
 	private _gradientColorsCache: GradientColorsCache | null = null;
 
 	public constructor(invalidateHandler: InvalidateHandler, options: ChartOptionsInternal) {
+		// TODO: 到底干嘛的？
 		this._invalidateHandler = invalidateHandler;
 		this._options = options;
 
-		// 价格轴渲染器选项的 Provider
+		// 价格轴渲染器选项的 Provider TODO:
 		this._rendererOptionsProvider = new PriceAxisRendererOptionsProvider(this);
 
 		// 时间刻度实例
 		this._timeScale = new TimeScale(this, options.timeScale, this._options.localization);
 		// 十字准星实例
 		this._crosshair = new Crosshair(this, options.crosshair);
+		// 磁铁实例 TODO:
 		this._magnet = new Magnet(options.crosshair);
+		// 水印实例
 		this._watermark = new Watermark(this, options.watermark);
 
 		this.createPane();
+		// 设置拉伸系数
 		this._panes[0].setStretchFactor(DEFAULT_STRETCH_FACTOR * 2);
 
+		// 从 chart options 中获取背景颜色并保存起来
 		this._backgroundTopColor = this._getBackgroundColor(BackgroundColorSide.Top);
 		this._backgroundBottomColor = this._getBackgroundColor(BackgroundColorSide.Bottom);
 	}
 
+	// 全量更新
 	public fullUpdate(): void {
 		this._invalidate(new InvalidateMask(InvalidationLevel.Full));
 	}
 
+	// 轻量更新 TODO: 如何量化？😂
 	public lightUpdate(): void {
 		this._invalidate(new InvalidateMask(InvalidationLevel.Light));
 	}
 
+	// 光标更新
 	public cursorUpdate(): void {
 		this._invalidate(new InvalidateMask(InvalidationLevel.Cursor));
 	}
 
+	// 更新数据源 TODO:
 	public updateSource(source: IPriceDataSource): void {
 		const inv = this._invalidationMaskForSource(source);
 		this._invalidate(inv);
 	}
 
+	// 获取 hovered source
 	public hoveredSource(): HoveredSource | null {
 		return this._hoveredSource;
 	}
 
+	// 设置 hovered source
 	public setHoveredSource(source: HoveredSource | null): void {
 		const prevSource = this._hoveredSource;
 		this._hoveredSource = source;
@@ -422,14 +445,19 @@ export class ChartModel implements IDestroyable {
 		}
 	}
 
+	// 获取 chart options
 	public options(): Readonly<ChartOptionsInternal> {
 		return this._options;
 	}
 
+	// 应用新的 chart options
 	public applyOptions(options: DeepPartial<ChartOptionsInternal>): void {
 		merge(this._options, options);
 
+		// 广播 options -> panes
 		this._panes.forEach((p: Pane) => p.applyScaleOptions(options));
+
+		// 根据需要更新的 options 来触发对应的更新逻辑
 
 		if (options.timeScale !== undefined) {
 			this._timeScale.applyOptions(options.timeScale);
@@ -521,6 +549,7 @@ export class ChartModel implements IDestroyable {
 		this.recalculateAllPanes();
 	}
 
+	// 创建窗格
 	public createPane(index?: number): Pane {
 		const pane = new Pane(this._timeScale, this);
 
@@ -537,6 +566,10 @@ export class ChartModel implements IDestroyable {
 		// if autoscale option is true, it is ok, just recalculate by invalidation mask
 		// if autoscale option is false, autoscale anyway on the first draw
 		// also there is a scenario when autoscale is true in constructor and false later on applyOptions
+		// 我们总是在创建时进行自动缩放
+        // 如果自动缩放选项为真，则没问题，只需通过失效掩码重新计算即可
+        // 如果自动缩放选项为 false，则在第一次绘制时仍会自动缩放
+        // 还有一种情况是，自动缩放在构造函数中为 true，稍后在应用选项时为 false
 		const mask = new InvalidateMask(InvalidationLevel.Full);
 		mask.invalidatePane(actualIndex, {
 			level: InvalidationLevel.None,

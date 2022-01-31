@@ -25,6 +25,7 @@ const enum Constants {
 }
 
 export class TimeScaleApi implements ITimeScaleApi, IDestroyable {
+	// 图表模型
 	private _model: ChartModel;
 	private _timeScale: TimeScale;
 	private readonly _timeAxisWidget: TimeAxisWidget;

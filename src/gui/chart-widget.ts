@@ -587,7 +587,7 @@ export class ChartWidget implements IDestroyable {
 		}
 	}
 
-	// 无效的处理程序 TODO:
+	// 无效视图的 handler TODO:
 	private _invalidateHandler(invalidateMask: InvalidateMask): void {
 		if (this._invalidateMask !== null) {
 			this._invalidateMask.merge(invalidateMask);

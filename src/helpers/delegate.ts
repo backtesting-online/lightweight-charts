@@ -30,7 +30,7 @@ export class Delegate<T1 = void, T2 = void> implements ISubscription<T1, T2> {
 		}
 	}
 
-	// 取消订阅所有的 (WHY: 看代码是只保留 linkedObject 相同的)
+	// 取消订阅所有的
 	public unsubscribeAll(linkedObject: unknown): void {
 		this._listeners = this._listeners.filter((listener: Listener<T1, T2>) => listener.linkedObject !== linkedObject);
 	}
