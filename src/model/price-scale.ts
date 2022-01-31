@@ -96,6 +96,7 @@ export interface PriceScaleMargins {
 
 /**
  * Represents the position of a price axis relative to the chart.
+ * 表示价格轴相对于图表的位置
  */
 export type PriceAxisPosition = 'left' | 'right' | 'none';
 

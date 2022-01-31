@@ -1,7 +1,7 @@
 {
     "files.exclude": {
-        "dist/**": true,
-        "lib/**": true,
+        // "dist/**": true,
+        // "lib/**": true,
         "tests/e2e/graphics/.gendata/**": true,
         "website/.docusaurus/**": true,
         "website/build/**": true,
@@ -10,10 +10,24 @@
     "typescript.tsdk": "node_modules\\typescript\\lib",
     "todohighlight.keywords": [
         {
-            // 表示感激不应该这么操作
+            // 表示感觉不应该这么操作
             "text": "WHY:",
             "color": "#fff",
-            "backgroundColor": "#CC3366",
+            "backgroundColor": "#666699",
+            "overviewRulerColor": "grey"
+        },
+        {
+            // 日志输出
+            "text": "LOG:",
+            "color": "#fff",
+            "backgroundColor": "#990033",
+            "overviewRulerColor": "grey"
+        },
+        {
+            // 先不用看
+            "text": "REMOTE:",
+            "color": "#fff",
+            "backgroundColor": "#0099CC",
             "overviewRulerColor": "grey"
         }
     ],

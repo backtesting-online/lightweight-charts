@@ -174,10 +174,10 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 			clone(chartOptionsDefaults) :
 			merge(clone(chartOptionsDefaults), toInternalOptions(options)) as ChartOptionsInternal;
 
-		// 生成图表组件
+		// 生成图表控件
 		this._chartWidget = new ChartWidget(container, internalOptions);
 
-		// TODO:
+		// 图表控件自身的 clicked 订阅器触发时，需要也触发 chart api 的 clicked 订阅器内的回调
 		this._chartWidget.clicked().subscribe(
 			(paramSupplier: MouseEventParamsImplSupplier) => {
 				if (this._clickedDelegate.hasListeners()) {
@@ -186,6 +186,7 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 			},
 			this
 		);
+		// 图表控件自身的十字准星移动订阅器触发时，需要也触发 chart api 的十字准星移动订阅器内的回调
 		this._chartWidget.crosshairMoved().subscribe(
 			(paramSupplier: MouseEventParamsImplSupplier) => {
 				if (this._crosshairMovedDelegate.hasListeners()) {
@@ -194,7 +195,7 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 			},
 			this
 		);
-		// TODO:
+		// TODO: 内部实现
 		const model = this._chartWidget.model();
 		// 创建时间刻度 API 实例
 		this._timeScaleApi = new TimeScaleApi(model, this._chartWidget.timeAxisWidget());

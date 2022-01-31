@@ -24,6 +24,7 @@ import { createPreconfiguredCanvas, getCanvasDevicePixelRatio, getContext2D, Siz
 import { PaneWidget } from './pane-widget';
 import { TimeAxisWidget } from './time-axis-widget';
 
+// 鼠标事件实现
 export interface MouseEventParamsImpl {
 	time?: TimePoint;
 	point?: Point;
@@ -38,22 +39,36 @@ export type MouseEventParamsImplSupplier = () => MouseEventParamsImpl;
  * 图表控件
  */
 export class ChartWidget implements IDestroyable {
+	// ChartApi 透传的 options
 	private readonly _options: ChartOptionsInternal;
+	// 窗格控件 TODO:类的实现
 	private _paneWidgets: PaneWidget[] = [];
 	// private _paneSeparators: PaneSeparator[] = [];
 	private readonly _model: ChartModel;
+	// requestAnimationFrame 返回的 ID 值, 应该是和 draw 相关
 	private _drawRafId: number = 0;
+	// 存储的图表高度和宽度
 	private _height: number = 0;
 	private _width: number = 0;
+	// 左侧价格轴宽度
 	private _leftPriceAxisWidth: number = 0;
+	// 右侧价格轴宽度
 	private _rightPriceAxisWidth: number = 0;
+	// 顶层 Div 元素
 	private _element: HTMLElement;
+	// table 元素
 	private readonly _tableElement: HTMLElement;
+	// 时间轴控件
 	private _timeAxisWidget: TimeAxisWidget;
+	// 无效蒙层 TODO:
 	private _invalidateMask: InvalidateMask | null = null;
+	// TODO: 像是表示是否已经绘制过了
 	private _drawPlanned: boolean = false;
+	// 鼠标点击事件的订阅器
 	private _clicked: Delegate<MouseEventParamsImplSupplier> = new Delegate();
+	// 十字准星移动事件的订阅器
 	private _crosshairMoved: Delegate<MouseEventParamsImplSupplier> = new Delegate();
+	// 滚轮事件
 	private _onWheelBound: (event: WheelEvent) => void;
 
 	public constructor(container: HTMLElement, options: ChartOptionsInternal) {
@@ -78,18 +93,22 @@ export class ChartWidget implements IDestroyable {
 		this._onWheelBound = this._onMousewheel.bind(this);
 		this._element.addEventListener('wheel', this._onWheelBound, { passive: false });
 
+		// 创建图表模型 TODO:
 		this._model = new ChartModel(
 			this._invalidateHandler.bind(this),
 			this._options
 		);
+		// TODO: 看着 chart model 也有自己的订阅器
 		this.model().crosshairMoved().subscribe(this._onPaneWidgetCrosshairMoved.bind(this), this);
 
+		// 创建时间轴控件，在 table 元素下插入这个元素
 		this._timeAxisWidget = new TimeAxisWidget(this);
 		this._tableElement.appendChild(this._timeAxisWidget.getElement());
 
 		let width = this._options.width;
 		let height = this._options.height;
 
+		// 如果没有传递宽度，那么在元素上计算下
 		if (width === 0 || height === 0) {
 			const containerRect = container.getBoundingClientRect();
 			// TODO: Fix it better
@@ -109,43 +128,56 @@ export class ChartWidget implements IDestroyable {
 
 		// BEWARE: resize must be called BEFORE _syncGuiWithModel (in constructor only)
 		// or after but with adjustSize to properly update time scale
+		// 注意：调整大小必须在_syncGuiWithModel之前调用（仅在构造函数中）。
+		// 或者在调用之后，但要与调整尺寸一起调用，以正确地更新时间刻度。
 		this.resize(width, height);
 
 		this._syncGuiWithModel();
 
+		// 插入 Div
 		container.appendChild(this._element);
+		// 更新时间轴刻度的可见性
 		this._updateTimeAxisVisibility();
+		// 订阅 options 的更新 TODO:内部实现
 		this._model.timeScale().optionsApplied().subscribe(this._model.fullUpdate.bind(this._model), this);
 		this._model.priceScalesOptionsChanged().subscribe(this._model.fullUpdate.bind(this._model), this);
 	}
 
+	// 获取 chart model 实例
 	public model(): ChartModel {
 		return this._model;
 	}
 
+	// 获取 chart options
 	public options(): Readonly<ChartOptionsInternal> {
 		return this._options;
 	}
 
+	// 获取窗格控件列表
 	public paneWidgets(): PaneWidget[] {
 		return this._paneWidgets;
 	}
 
+	// 获取时间轴控件实例
 	public timeAxisWidget(): TimeAxisWidget {
 		return this._timeAxisWidget;
 	}
 
+	// 销毁 chart 控件
 	public destroy(): void {
+		// 事件回调销毁
 		this._element.removeEventListener('wheel', this._onWheelBound);
 		if (this._drawRafId !== 0) {
 			window.cancelAnimationFrame(this._drawRafId);
 		}
 
+		// 取消订阅并销毁 model
 		this._model.crosshairMoved().unsubscribeAll(this);
 		this._model.timeScale().optionsApplied().unsubscribeAll(this);
 		this._model.priceScalesOptionsChanged().unsubscribeAll(this);
 		this._model.destroy();
 
+		// 移除窗格控件
 		for (const paneWidget of this._paneWidgets) {
 			this._tableElement.removeChild(paneWidget.getElement());
 			paneWidget.clicked().unsubscribeAll(this);
@@ -158,16 +190,20 @@ export class ChartWidget implements IDestroyable {
 		// }
 		// this._paneSeparators = [];
 
+		// 移除时间轴控件
 		ensureNotNull(this._timeAxisWidget).destroy();
 
+		// 父组件移除 chart div
 		if (this._element.parentElement !== null) {
 			this._element.parentElement.removeChild(this._element);
 		}
 
+		// 监听器销毁
 		this._crosshairMoved.destroy();
 		this._clicked.destroy();
 	}
 
+	// 调整 chart widget 的大小
 	public resize(width: number, height: number, forceRepaint: boolean = false): void {
 		if (this._height === height && this._width === width) {
 			return;
@@ -179,12 +215,14 @@ export class ChartWidget implements IDestroyable {
 		const heightStr = height + 'px';
 		const widthStr = width + 'px';
 
+		// 重置最外层 div 的宽高
 		ensureNotNull(this._element).style.height = heightStr;
 		ensureNotNull(this._element).style.width = widthStr;
-
+		// 重置 table 的宽高
 		this._tableElement.style.height = heightStr;
 		this._tableElement.style.width = widthStr;
 
+		// TODO: 更新 UI 逻辑
 		if (forceRepaint) {
 			this._drawImpl(new InvalidateMask(InvalidationLevel.Full));
 		} else {
@@ -192,6 +230,8 @@ export class ChartWidget implements IDestroyable {
 		}
 	}
 
+	// 绘图 (窗格控件 + 时间轴控件)
+	// TODO:内部实现
 	public paint(invalidateMask?: InvalidateMask): void {
 		if (invalidateMask === undefined) {
 			invalidateMask = new InvalidateMask(InvalidationLevel.Full);
@@ -206,27 +246,35 @@ export class ChartWidget implements IDestroyable {
 		}
 	}
 
+	// 应用新的图表 options
 	public applyOptions(options: DeepPartial<ChartOptionsInternal>): void {
 		// we don't need to merge options here because it's done in chart model
 		// and since both model and widget share the same object it will be done automatically for widget as well
 		// not ideal solution for sure, but it work's for now ¯\_(ツ)_/¯
+		// 我们不需要在这里合并选项，因为它是在图表模型中完成的
+        // 由于模型和小部件共享同一对象，因此小部件也将自动完成
+        // 肯定不是理想的解决方案，但它现在̄\_(ツ)_/ ̄有效
 		this._model.applyOptions(options);
 		this._updateTimeAxisVisibility();
 
+		// 重置下大小
 		const width = options.width || this._width;
 		const height = options.height || this._height;
 
 		this.resize(width, height);
 	}
 
+	// 暴露鼠标点击订阅器
 	public clicked(): ISubscription<MouseEventParamsImplSupplier> {
 		return this._clicked;
 	}
 
+	// 暴露十字准星订阅器
 	public crosshairMoved(): ISubscription<MouseEventParamsImplSupplier> {
 		return this._crosshairMoved;
 	}
 
+	// REMOTE:截取屏幕截图
 	public takeScreenshot(): HTMLCanvasElement {
 		if (this._invalidateMask !== null) {
 			this._drawImpl(this._invalidateMask);
@@ -309,6 +357,7 @@ export class ChartWidget implements IDestroyable {
 		return targetCanvas;
 	}
 
+	// 获取价格轴宽度
 	public getPriceAxisWidth(position: PriceAxisPosition): number {
 		if (position === 'none') {
 			return 0;
@@ -329,12 +378,17 @@ export class ChartWidget implements IDestroyable {
 		// we don't need to worry about exactly pane widget here
 		// because all pane widgets have the same width of price axis widget
 		// see _adjustSizeImpl
+		// 我们不需要担心这里的窗格部件
+		// 因为所有的窗格部件都有与价格轴部件相同的宽度
+		// 见 _adjustSizeImpl
+		// TODO: _paneWidgets 里面是装什么的, 在哪里赋值
 		const priceAxisWidget = position === 'left'
 			? this._paneWidgets[0].leftPriceAxisWidget()
 			: this._paneWidgets[0].rightPriceAxisWidget();
 		return ensureNotNull(priceAxisWidget).getWidth();
 	}
 
+	// 调整大小的实现 TODO:内部实现
 	// eslint-disable-next-line complexity
 	private _adjustSizeImpl(): void {
 		let totalStretch = 0;
@@ -417,53 +471,73 @@ export class ChartWidget implements IDestroyable {
 		}
 	}
 
+	// 鼠标滚动事件
 	private _onMousewheel(event: WheelEvent): void {
+		// WHY: 为什么要除以100
+		// 滚轮的横向滚动量 (往右为正， 往左为负)
 		let deltaX = event.deltaX / 100;
+		// 滚轮的纵向滚动量 (deltaY 往上为正，往下为负)
 		let deltaY = -(event.deltaY / 100);
 
+		// 如果用户禁止滚动或者横纵向没有滚动距离，直接返回
 		if ((deltaX === 0 || !this._options.handleScroll.mouseWheel) &&
 			(deltaY === 0 || !this._options.handleScale.mouseWheel)) {
 			return;
 		}
 
+		// 取消默认行为
 		if (event.cancelable) {
 			event.preventDefault();
 		}
 
+		// WHY: deltaX 和 deltaY 的计算逻辑
 		switch (event.deltaMode) {
 			case event.DOM_DELTA_PAGE:
 				// one screen at time scroll mode
+				// 滚动量单位为像素
 				deltaX *= 120;
 				deltaY *= 120;
 				break;
 
 			case event.DOM_DELTA_LINE:
 				// one line at time scroll mode
+				// 滚动量单位为行
 				deltaX *= 32;
 				deltaY *= 32;
 				break;
 		}
 
+		// 在 Y 轴上执行了缩放
 		if (deltaY !== 0 && this._options.handleScale.mouseWheel) {
+			// Math.sign: 返回一个数字的符号, 指示数字是正数，负数还是零
+			// Math.abs: 计算绝对值
+			// 缩放比例
 			const zoomScale = Math.sign(deltaY) * Math.min(1, Math.abs(deltaY));
+			// 当前鼠标滚动的位置（要减去 chart element 左侧的位置）
 			const scrollPosition = event.clientX - this._element.getBoundingClientRect().left;
+			// TODO:内部实现
 			this.model().zoomTime(scrollPosition as Coordinate, zoomScale);
 		}
 
+		// 在 X 轴上执行了缩放, 需要滚动图表
 		if (deltaX !== 0 && this._options.handleScroll.mouseWheel) {
+			// TODO: 内部实现
 			this.model().scrollChart(deltaX * -80 as Coordinate); // 80 is a made up coefficient, and minus is for the "natural" scroll
 		}
 	}
 
+	// TODO:绘图的实现
 	private _drawImpl(invalidateMask: InvalidateMask): void {
 		const invalidationType = invalidateMask.fullInvalidation();
 
 		// actions for full invalidation ONLY (not shared with light)
+		// 仅用于完全无效的行动（不与light共享）
 		if (invalidationType === InvalidationLevel.Full) {
 			this._updateGui();
 		}
 
 		// light or full invalidate actions
+		// 轻度或完全无效操作
 		if (
 			invalidationType === InvalidationLevel.Full ||
 			invalidationType === InvalidationLevel.Light
@@ -491,6 +565,7 @@ export class ChartWidget implements IDestroyable {
 		this.paint(invalidateMask);
 	}
 
+	// 应用时间刻度失效: TODO:
 	private _applyTimeScaleInvalidation(invalidation: TimeScaleInvalidation): void {
 		const timeScale = this._model.timeScale();
 		switch (invalidation.type) {
@@ -512,6 +587,7 @@ export class ChartWidget implements IDestroyable {
 		}
 	}
 
+	// 无效的处理程序 TODO:
 	private _invalidateHandler(invalidateMask: InvalidateMask): void {
 		if (this._invalidateMask !== null) {
 			this._invalidateMask.merge(invalidateMask);
@@ -533,6 +609,7 @@ export class ChartWidget implements IDestroyable {
 		}
 	}
 
+	// 更新 UI
 	private _updateGui(): void {
 		this._syncGuiWithModel();
 	}
@@ -542,12 +619,15 @@ export class ChartWidget implements IDestroyable {
 	// 	separator.destroy();
 	// }
 
+	// 同步 GUI TODO: 内部实现
 	private _syncGuiWithModel(): void {
+		// 获取窗格控件
 		const panes = this._model.panes();
 		const targetPaneWidgetsCount = panes.length;
 		const actualPaneWidgetsCount = this._paneWidgets.length;
 
 		// Remove (if needed) pane widgets and separators
+		// 删除（如果需要）窗格微件
 		for (let i = targetPaneWidgetsCount; i < actualPaneWidgetsCount; i++) {
 			const paneWidget = ensureDefined(this._paneWidgets.pop());
 			this._tableElement.removeChild(paneWidget.getElement());
@@ -561,6 +641,7 @@ export class ChartWidget implements IDestroyable {
 		}
 
 		// Create (if needed) new pane widgets and separators
+		// 创建（如果需要）窗格微件
 		for (let i = actualPaneWidgetsCount; i < targetPaneWidgetsCount; i++) {
 			const paneWidget = new PaneWidget(this, panes[i]);
 			paneWidget.clicked().subscribe(this._onPaneWidgetClicked.bind(this), this);
@@ -578,6 +659,7 @@ export class ChartWidget implements IDestroyable {
 			this._tableElement.insertBefore(paneWidget.getElement(), this._timeAxisWidget.getElement());
 		}
 
+		// 更新窗格控件
 		for (let i = 0; i < targetPaneWidgetsCount; i++) {
 			const state = panes[i];
 			const paneWidget = this._paneWidgets[i];
@@ -588,10 +670,12 @@ export class ChartWidget implements IDestroyable {
 			}
 		}
 
+		// 调整大小
 		this._updateTimeAxisVisibility();
 		this._adjustSizeImpl();
 	}
 
+	// 获取鼠标事件参数 TODO:内部实现
 	private _getMouseEventParamsImpl(index: TimePointIndex | null, point: Point | null): MouseEventParamsImpl {
 		const seriesPrices = new Map<Series, BarPrice | BarPrices>();
 		if (index !== null) {
@@ -631,23 +715,28 @@ export class ChartWidget implements IDestroyable {
 		};
 	}
 
+	// 窗格控件组件触发鼠标点击事件
 	private _onPaneWidgetClicked(time: TimePointIndex | null, point: Point): void {
 		this._clicked.fire(() => this._getMouseEventParamsImpl(time, point));
 	}
 
+	// 窗格上的小工具十字准星移动时触发
 	private _onPaneWidgetCrosshairMoved(time: TimePointIndex | null, point: Point | null): void {
 		this._crosshairMoved.fire(() => this._getMouseEventParamsImpl(time, point));
 	}
 
+	// 更新时间轴刻度的可见性
 	private _updateTimeAxisVisibility(): void {
 		const display = this._options.timeScale.visible ? '' : 'none';
 		this._timeAxisWidget.getElement().style.display = display;
 	}
 
+	// 左边坐标轴是否可见
 	private _isLeftAxisVisible(): boolean {
 		return this._paneWidgets[0].state().leftPriceScale().options().visible;
 	}
 
+	// 右边坐标轴是否可见
 	private _isRightAxisVisible(): boolean {
 		return this._paneWidgets[0].state().rightPriceScale().options().visible;
 	}
