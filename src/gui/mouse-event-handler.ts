@@ -864,3 +864,8 @@ function touchWithId(touches: TouchList, id: number): Touch | null {
 
 	return null;
 }
+
+export interface TouchMouseEventLocal {
+	readonly localX: Coordinate;
+	readonly localY: Coordinate;
+}

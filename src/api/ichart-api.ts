@@ -190,6 +190,8 @@ export interface IChartApi {
 	 */
 	subscribeClick(handler: MouseEventHandler): void;
 
+	moveCrosshair(point: Point | null): void;
+
 	/**
 	 * Unsubscribe a handler that was previously subscribed using {@link subscribeClick}.
 	 * 取消订阅某事件监听器

@@ -8,6 +8,7 @@ import { clone, DeepPartial, isBoolean, merge } from '../helpers/strict-type-che
 import { BarPrice, BarPrices } from '../model/bar';
 import { ChartOptions, ChartOptionsInternal } from '../model/chart-model';
 import { ColorType } from '../model/layout-options';
+import { Point } from '../model/point';
 import { Series } from '../model/series';
 import {
 	AreaSeriesOptions,
@@ -414,6 +415,19 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 	// 获取屏幕截图 TODO:内部实现
 	public takeScreenshot(): HTMLCanvasElement {
 		return this._chartWidget.takeScreenshot();
+	}
+
+	public moveCrosshair(point: Point | null): void {
+		if (!point) {
+			return;
+		}
+
+		const paneWidgets = this._chartWidget.paneWidgets();
+		const event = {
+			localX: point.x,
+			localY: point.y,
+		};
+		paneWidgets[0].mouseMoveEvent(event);
 	}
 
 	// 发送更新到图表 TODO:内部实现
