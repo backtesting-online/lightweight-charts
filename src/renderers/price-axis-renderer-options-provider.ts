@@ -26,6 +26,7 @@ export class PriceAxisRendererOptionsProvider {
 		paddingOuter: 0,
 		paddingTop: 0,
 		baselineOffset: 0,
+		width: 0,
 	};
 
 	public constructor(chartModel: ChartModel) {
@@ -55,8 +56,13 @@ export class PriceAxisRendererOptionsProvider {
 		}
 
 		rendererOptions.color = this._textColor();
+		rendererOptions.width = this._width();
 
 		return this._rendererOptions;
+	}
+
+	private _width(): number {
+		return this._chartModel.options().rightPriceScale.width;
 	}
 
 	// 下面的方法都是从 chartModel 上获取 chart options 的数据
