@@ -106,7 +106,8 @@ export interface PriceScaleOptions {
 	/**
 	 * Autoscaling is a feature that automatically adjusts a price scale to fit the visible range of data.
 	 * Note that overlay price scales are always auto-scaled.
-	 * 是否开启自动缩放.
+	 * 是否开启自动缩放 (就是随着移动自动调整价格刻度，默认是自动，如果移动了刻度图表，那么会切换成非自动缩放
+	 * 双击下又切换回来了)
 	 *
 	 * @defaultValue `true`
 	 */

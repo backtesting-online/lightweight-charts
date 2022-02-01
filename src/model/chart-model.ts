@@ -477,7 +477,9 @@ export class ChartModel implements IDestroyable {
 		this.fullUpdate();
 	}
 
+	// 应用新的价格刻度 Options
 	public applyPriceScaleOptions(priceScaleId: string, options: DeepPartial<PriceScaleOptions>): void {
+		// 如果是默认的左边或右边
 		if (priceScaleId === DefaultPriceScaleId.Left) {
 			this.applyOptions({
 				leftPriceScale: options,
@@ -490,6 +492,7 @@ export class ChartModel implements IDestroyable {
 			return;
 		}
 
+		// 不是默认的 price scale
 		const res = this.findPriceScale(priceScaleId);
 
 		if (res === null) {
@@ -504,6 +507,7 @@ export class ChartModel implements IDestroyable {
 		this._priceScalesOptionsChanged.fire();
 	}
 
+	// 在 panes 中寻找 price scale TODO:实现
 	public findPriceScale(priceScaleId: string): PriceScaleOnPane | null {
 		for (const pane of this._panes) {
 			const priceScale = pane.priceScaleById(priceScaleId);
@@ -517,32 +521,40 @@ export class ChartModel implements IDestroyable {
 		return null;
 	}
 
+	// 获取时间刻度实例
 	public timeScale(): TimeScale {
 		return this._timeScale;
 	}
 
+	// 获取窗格面板列表
 	public panes(): readonly Pane[] {
 		return this._panes;
 	}
 
+	// 获取 水印实例 REMOTE:
 	public watermarkSource(): Watermark {
 		return this._watermark;
 	}
 
+	// 获取 十字准星实例
 	public crosshairSource(): Crosshair {
 		return this._crosshair;
 	}
 
+	// 获取 十字准星移动监听器
 	public crosshairMoved(): ISubscription<TimePointIndex | null, Point | null> {
 		return this._crosshairMoved;
 	}
 
+	// 设置窗格高度
 	public setPaneHeight(pane: Pane, height: number): void {
 		pane.setHeight(height);
 		this.recalculateAllPanes();
 	}
 
+	// 设置宽度
 	public setWidth(width: number): void {
+		// 重新设置图表，时间刻度，所有窗格的宽度
 		this._width = width;
 		this._timeScale.setWidth(this._width);
 		this._panes.forEach((pane: Pane) => pane.setWidth(width));
@@ -580,21 +592,25 @@ export class ChartModel implements IDestroyable {
 		return pane;
 	}
 
+	// 开始调整价格刻度时触发 （按下鼠标时）
 	public startScalePrice(pane: Pane, priceScale: PriceScale, x: number): void {
 		pane.startScalePrice(priceScale, x);
 	}
 
+	// 调整价格刻度到指定的位置
 	public scalePriceTo(pane: Pane, priceScale: PriceScale, x: number): void {
 		pane.scalePriceTo(priceScale, x);
 		this.updateCrosshair();
 		this._invalidate(this._paneInvalidationMask(pane, InvalidationLevel.Light));
 	}
 
+	// 结束调整价格刻度时触发（松开鼠标时）
 	public endScalePrice(pane: Pane, priceScale: PriceScale): void {
 		pane.endScalePrice(priceScale);
 		this._invalidate(this._paneInvalidationMask(pane, InvalidationLevel.Light));
 	}
 
+	// 开始拖动图表时触发
 	public startScrollPrice(pane: Pane, priceScale: PriceScale, x: number): void {
 		if (priceScale.isAutoScale()) {
 			return;
@@ -602,6 +618,7 @@ export class ChartModel implements IDestroyable {
 		pane.startScrollPrice(priceScale, x);
 	}
 
+	// 拖动图表过程中触发
 	public scrollPriceTo(pane: Pane, priceScale: PriceScale, x: number): void {
 		if (priceScale.isAutoScale()) {
 			return;
@@ -611,6 +628,7 @@ export class ChartModel implements IDestroyable {
 		this._invalidate(this._paneInvalidationMask(pane, InvalidationLevel.Light));
 	}
 
+	// 结束拖动图表时触发
 	public endScrollPrice(pane: Pane, priceScale: PriceScale): void {
 		if (priceScale.isAutoScale()) {
 			return;
@@ -619,17 +637,20 @@ export class ChartModel implements IDestroyable {
 		this._invalidate(this._paneInvalidationMask(pane, InvalidationLevel.Light));
 	}
 
+	// 重置价格缩放
 	public resetPriceScale(pane: Pane, priceScale: PriceScale): void {
 		pane.resetPriceScale(priceScale);
 		this._invalidate(this._paneInvalidationMask(pane, InvalidationLevel.Light));
 	}
 
+	// 开始调整时间刻度
 	public startScaleTime(position: Coordinate): void {
 		this._timeScale.startScale(position);
 	}
 
 	/**
 	 * Zoom in/out the chart (depends on scale value).
+	 * 放大/缩小图表
 	 *
 	 * @param pointX - X coordinate of the point to apply the zoom (the point which should stay on its place)
 	 * @param scale - Zoom value. Negative value means zoom out, positive - zoom in.
@@ -643,32 +664,38 @@ export class ChartModel implements IDestroyable {
 		const timeScaleWidth = timeScale.width();
 		pointX = Math.max(1, Math.min(pointX, timeScaleWidth)) as Coordinate;
 
+		// 时间刻度缩放
 		timeScale.zoom(pointX, scale);
-
+		// 重新计算所有 panes 的宽度
 		this.recalculateAllPanes();
 	}
 
+	// 通过滚轴水平滚动时触发 (滚轴 + shift 时触发)
 	public scrollChart(x: Coordinate): void {
 		this.startScrollTime(0 as Coordinate);
 		this.scrollTimeTo(x);
 		this.endScrollTime();
 	}
 
+	// 滚动时间轴时触发
 	public scaleTimeTo(x: Coordinate): void {
 		this._timeScale.scaleTo(x);
 		this.recalculateAllPanes();
 	}
 
+	// 时间刻度停止缩放时触发 （鼠标松开）
 	public endScaleTime(): void {
 		this._timeScale.endScale();
 		this.lightUpdate();
 	}
 
+	// 图表时间轴方向开始滚动触发
 	public startScrollTime(x: Coordinate): void {
 		this._initialTimeScrollPos = x;
 		this._timeScale.startScroll(x);
 	}
 
+	// 图表时间轴方向滚动时触发
 	public scrollTimeTo(x: Coordinate): boolean {
 		let res = false;
 		if (this._initialTimeScrollPos !== null && Math.abs(x - this._initialTimeScrollPos) > 20) {
@@ -681,6 +708,7 @@ export class ChartModel implements IDestroyable {
 		return res;
 	}
 
+	// 图表时间轴方向结束滚动触发
 	public endScrollTime(): void {
 		this._timeScale.endScroll();
 		this.lightUpdate();
@@ -688,10 +716,12 @@ export class ChartModel implements IDestroyable {
 		this._initialTimeScrollPos = null;
 	}
 
+	// 获取 series 实例列表
 	public serieses(): readonly Series[] {
 		return this._serieses;
 	}
 
+	// 设置当前所处的位置（光标，也就是十字准星）
 	public setAndSaveCurrentPosition(x: Coordinate, y: Coordinate, pane: Pane): void {
 		this._crosshair.saveOriginCoord(x, y);
 		let price = NaN;
@@ -715,6 +745,7 @@ export class ChartModel implements IDestroyable {
 		this._crosshairMoved.fire(this._crosshair.appliedIndex(), { x, y });
 	}
 
+	// 清除十字准星的位置 (也就是不显示)
 	public clearCurrentPosition(): void {
 		const crosshair = this.crosshairSource();
 		crosshair.clearPosition();
@@ -722,6 +753,7 @@ export class ChartModel implements IDestroyable {
 		this._crosshairMoved.fire(null, null);
 	}
 
+	// 更新十字准星的相对位置 （比如调整缩放，十字准星还得在对应的k线上）
 	public updateCrosshair(): void {
 		// apply magnet
 		const pane = this._crosshair.pane();
@@ -734,6 +766,7 @@ export class ChartModel implements IDestroyable {
 		this._crosshair.updateAllViews();
 	}
 
+	// 更新时间刻度 TODO:
 	public updateTimeScale(newBaseIndex: TimePointIndex | null, newPoints?: readonly TimeScalePoint[], firstChangedPointIndex?: number): void {
 		const oldFirstTime = this._timeScale.indexToTime(0 as TimePointIndex);
 
@@ -765,23 +798,27 @@ export class ChartModel implements IDestroyable {
 		this._timeScale.setBaseIndex(newBaseIndex);
 	}
 
+	// 重新计算窗格
 	public recalculatePane(pane: Pane | null): void {
 		if (pane !== null) {
 			pane.recalculate();
 		}
 	}
 
+	// 获取窗格的源
 	public paneForSource(source: IPriceDataSource): Pane | null {
 		const pane = this._panes.find((p: Pane) => p.orderedSources().includes(source));
 		return pane === undefined ? null : pane;
 	}
 
+	// 重新计算所有窗格
 	public recalculateAllPanes(): void {
 		this._watermark.updateAllViews();
 		this._panes.forEach((p: Pane) => p.recalculate());
 		this.updateCrosshair();
 	}
 
+	// 销毁
 	public destroy(): void {
 		this._panes.forEach((p: Pane) => p.destroy());
 		this._panes.length = 0;
@@ -791,18 +828,22 @@ export class ChartModel implements IDestroyable {
 		this._options.localization.timeFormatter = undefined;
 	}
 
+	// get 价格轴渲染器选项的 Provider 的实例
 	public rendererOptionsProvider(): PriceAxisRendererOptionsProvider {
 		return this._rendererOptionsProvider;
 	}
 
+	// 获取 价格轴渲染器选项
 	public priceAxisRendererOptions(): Readonly<PriceAxisViewRendererOptions> {
 		return this._rendererOptionsProvider.options();
 	}
 
+	// 获取 价格刻度选项监听器
 	public priceScalesOptionsChanged(): ISubscription {
 		return this._priceScalesOptionsChanged;
 	}
 
+	// 创建 series
 	public createSeries<T extends SeriesType>(seriesType: T, options: SeriesOptionsMap[T]): Series<T> {
 		const pane = this._panes[0];
 		const series = this._createSeries(options, seriesType, pane);
@@ -818,6 +859,7 @@ export class ChartModel implements IDestroyable {
 		return series;
 	}
 
+	// 移除 series
 	public removeSeries(series: Series): void {
 		const pane = this.paneForSource(series);
 
