@@ -1,6 +1,6 @@
 import { ensureNotNull } from '../helpers/assertions';
 import { isFF, isIOS } from '../helpers/browsers';
-import { preventScrollByWheelClick } from '../helpers/events';
+import { MouseEventButton, preventScrollByWheelClick } from '../helpers/events';
 import { IDestroyable } from '../helpers/idestroyable';
 
 import { Coordinate } from '../model/coordinate';

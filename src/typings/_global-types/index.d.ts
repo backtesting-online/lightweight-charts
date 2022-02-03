@@ -9,13 +9,13 @@ type TimerId = ReturnType<typeof setTimeout>;
  * e.button values for MouseEvents.
  * It's NOT e.buttons (with s)!
  */
-declare const enum MouseEventButton {
-	Left = 0,
-	Middle = 1,
-	Right = 2,
-	Fourth = 3,
-	Fifth = 4,
-}
+// declare const enum MouseEventButton {
+// 	Left = 0,
+// 	Middle = 1,
+// 	Right = 2,
+// 	Fourth = 3,
+// 	Fifth = 4,
+// }
 
 /**
  * Removes "readonly" from all properties
