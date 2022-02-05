@@ -56,13 +56,13 @@ export class PriceAxisRendererOptionsProvider {
 		}
 
 		rendererOptions.color = this._textColor();
-		rendererOptions.width = this._width();
+		rendererOptions.width = this._priceScaleWidth();
 
 		return this._rendererOptions;
 	}
 
-	private _width(): number {
-		return this._chartModel.options().rightPriceScale.width;
+	private _priceScaleWidth(): number {
+		return this._chartModel.options().priceScaleWidth;
 	}
 
 	// 下面的方法都是从 chartModel 上获取 chart options 的数据

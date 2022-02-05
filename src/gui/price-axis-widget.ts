@@ -209,7 +209,13 @@ export class PriceAxisWidget implements IDestroyable {
 			);
 		}
 
-		tickMarkMaxWidth = Math.max(tickMarkMaxWidth, rendererOptions.width);
+		// TODO: 待优化
+		// 加上支持限制最大宽度
+		if (rendererOptions.width) {
+			// 不用计算的宽度，用参数的
+			tickMarkMaxWidth = rendererOptions.width
+		}
+
 		const resultTickMarksMaxWidth = tickMarkMaxWidth || Constants.DefaultOptimalWidth;
 
 		let res = Math.ceil(

@@ -326,6 +326,7 @@ export interface ChartOptions {
 	 */
 	trackingMode: TrackingModeOptions;
 
+	priceScaleWidth: number;
 }
 // 在代码内部使用的图表配置
 export type ChartOptionsInternal =

@@ -14,5 +14,4 @@ export const priceScaleOptionsDefaults: PriceScaleOptions = {
 		bottom: 0.1,
 		top: 0.2,
 	},
-	width: 0,
 };
