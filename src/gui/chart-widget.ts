@@ -68,6 +68,8 @@ export class ChartWidget implements IDestroyable {
 	private _clicked: Delegate<MouseEventParamsImplSupplier> = new Delegate();
 	// 十字准星移动事件的订阅器
 	private _crosshairMoved: Delegate<MouseEventParamsImplSupplier> = new Delegate();
+	// 十字准星离开事件
+	private _crosshairLeave: Delegate = new Delegate();
 	// 滚轮事件
 	private _onWheelBound: (event: WheelEvent) => void;
 
@@ -181,6 +183,7 @@ export class ChartWidget implements IDestroyable {
 		for (const paneWidget of this._paneWidgets) {
 			this._tableElement.removeChild(paneWidget.getElement());
 			paneWidget.clicked().unsubscribeAll(this);
+			paneWidget.crosshairLeave().unsubscribeAll(this);
 			paneWidget.destroy();
 		}
 		this._paneWidgets = [];
@@ -200,6 +203,7 @@ export class ChartWidget implements IDestroyable {
 
 		// 监听器销毁
 		this._crosshairMoved.destroy();
+		this._crosshairLeave.destroy();
 		this._clicked.destroy();
 	}
 
@@ -272,6 +276,10 @@ export class ChartWidget implements IDestroyable {
 	// 暴露十字准星订阅器
 	public crosshairMoved(): ISubscription<MouseEventParamsImplSupplier> {
 		return this._crosshairMoved;
+	}
+
+	public crosshairLeave(): ISubscription {
+		return this._crosshairLeave;
 	}
 
 	// REMOTE:截取屏幕截图
@@ -654,6 +662,7 @@ export class ChartWidget implements IDestroyable {
 			const paneWidget = ensureDefined(this._paneWidgets.pop());
 			this._tableElement.removeChild(paneWidget.getElement());
 			paneWidget.clicked().unsubscribeAll(this);
+			paneWidget.crosshairLeave().unsubscribeAll(this);
 			paneWidget.destroy();
 
 			// const paneSeparator = this._paneSeparators.pop();
@@ -667,6 +676,7 @@ export class ChartWidget implements IDestroyable {
 		for (let i = actualPaneWidgetsCount; i < targetPaneWidgetsCount; i++) {
 			const paneWidget = new PaneWidget(this, panes[i]);
 			paneWidget.clicked().subscribe(this._onPaneWidgetClicked.bind(this), this);
+			paneWidget.crosshairLeave().subscribe(this._onCrosshairLeave.bind(this), this);
 
 			this._paneWidgets.push(paneWidget);
 
@@ -740,6 +750,10 @@ export class ChartWidget implements IDestroyable {
 	// 窗格控件组件触发鼠标点击事件
 	private _onPaneWidgetClicked(time: TimePointIndex | null, point: Point): void {
 		this._clicked.fire(() => this._getMouseEventParamsImpl(time, point));
+	}
+
+	private _onCrosshairLeave(): void {
+		this._crosshairLeave.fire()
 	}
 
 	// 窗格上的小工具十字准星移动时触发

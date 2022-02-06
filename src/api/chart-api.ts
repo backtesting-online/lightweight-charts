@@ -166,6 +166,8 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 	private readonly _clickedDelegate: Delegate<MouseEventParams> = new Delegate();
 	// 十字准星移动事件的订阅器
 	private readonly _crosshairMovedDelegate: Delegate<MouseEventParams> = new Delegate();
+	// 鼠标移出 pane 订阅器
+	private readonly _crosshairLeaveDelegate: Delegate = new Delegate();
 	// 时间刻度 API 实例
 	private readonly _timeScaleApi: TimeScaleApi;
 
@@ -196,6 +198,17 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 			},
 			this
 		);
+
+		// 十字准星移出图表事件
+		this._chartWidget.crosshairLeave().subscribe(
+			() => {
+				if (this._crosshairLeaveDelegate.hasListeners()) {
+					this._crosshairLeaveDelegate.fire();
+				}
+			},
+			this
+		)
+
 		// TODO: 内部实现
 		const model = this._chartWidget.model();
 		// 创建时间刻度 API 实例
@@ -221,6 +234,7 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 		// 销毁监听器
 		this._clickedDelegate.destroy();
 		this._crosshairMovedDelegate.destroy();
+		this._crosshairLeaveDelegate.destroy();
 		this._dataLayer.destroy();
 	}
 
@@ -386,6 +400,14 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 		this._crosshairMovedDelegate.unsubscribe(handler);
 	}
 
+	public subscribeCrosshairLeave(handler: () => void): void  {
+		this._crosshairLeaveDelegate.subscribe(handler)
+	}
+
+	public unsubscribeCrosshairLeave(handler: () => void): void  {
+		this._crosshairLeaveDelegate.unsubscribe(handler)
+	}
+
 	// 返回价格刻度 API 实例
 	public priceScale(priceScaleId?: string): IPriceScaleApi {
 		// 如果没有传递价格刻度 ID 的话，就获取默认的，不过已经废弃
@@ -427,7 +449,13 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 			localX: point.x,
 			localY: point.y,
 		};
+
 		paneWidgets[0].mouseMoveEvent(event);
+	}
+
+	public clearCrossHair(): void {
+		const paneWidgets = this._chartWidget.paneWidgets();
+		paneWidgets[0].clearCrossHair();
 	}
 
 	// 发送更新到图表 TODO:内部实现

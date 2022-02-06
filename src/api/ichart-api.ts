@@ -192,6 +192,8 @@ export interface IChartApi {
 
 	moveCrosshair(point: Point | null): void;
 
+	clearCrossHair(): void;
+
 	/**
 	 * Unsubscribe a handler that was previously subscribed using {@link subscribeClick}.
 	 * 取消订阅某事件监听器
@@ -276,4 +278,7 @@ export interface IChartApi {
 	 * @returns A canvas with the chart drawn on. Any `Canvas` methods like `toDataURL()` or `toBlob()` can be used to serialize the result.
 	 */
 	takeScreenshot(): HTMLCanvasElement;
+
+	subscribeCrosshairLeave(handler: () => void): void;
+	unsubscribeCrosshairLeave(handler: () => void): void;
 }

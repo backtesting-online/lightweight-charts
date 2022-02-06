@@ -85,6 +85,7 @@ export class PaneWidget implements IDestroyable, MouseEventHandlers {
 	private _startScrollingPos: StartScrollPosition | null = null;
 	private _isScrolling: boolean = false;
 	private _clicked: Delegate<TimePointIndex | null, Point> = new Delegate();
+	private _crosshairLeave: Delegate = new Delegate();
 	private _prevPinchScale: number = 0;
 	private _longTap: boolean = false;
 	private _startTrackPoint: Point | null = null;
@@ -316,10 +317,29 @@ export class PaneWidget implements IDestroyable, MouseEventHandlers {
 
 		this._state.model().setHoveredSource(null);
 		this._clearCrosshairPosition();
+
+		if(this._crosshairLeave.hasListeners()) {
+			this._crosshairLeave.fire();
+		}
+	}
+
+	public clearCrossHair(): void {
+		if (this._state === null) {
+			return;
+		}
+
+		this._onMouseEvent();
+
+		this._state.model().setHoveredSource(null);
+		this._clearCrosshairPosition();
 	}
 
 	public clicked(): ISubscription<TimePointIndex | null, Point> {
 		return this._clicked;
+	}
+
+	public crosshairLeave(): ISubscription {
+		return this._crosshairLeave;
 	}
 
 	public pinchStartEvent(): void {
