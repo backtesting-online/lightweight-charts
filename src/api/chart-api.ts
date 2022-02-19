@@ -1,15 +1,13 @@
 import { ChartWidget, MouseEventParamsImpl, MouseEventParamsImplSupplier } from '../gui/chart-widget';
 
-import { ensureDefined } from '../helpers/assertions';
+import { assert, ensureDefined } from '../helpers/assertions';
 import { Delegate } from '../helpers/delegate';
-import { warn } from '../helpers/logger';
 import { clone, DeepPartial, isBoolean, merge } from '../helpers/strict-type-checks';
 
-import { BarPrice, BarPrices } from '../model/bar';
 import { ChartOptions, ChartOptionsInternal } from '../model/chart-model';
-import { ColorType } from '../model/layout-options';
 import { Point } from '../model/point';
 import { Series } from '../model/series';
+import { SeriesPlotRow } from '../model/series-data';
 import {
 	AreaSeriesOptions,
 	AreaSeriesPartialOptions,
@@ -29,10 +27,12 @@ import {
 	PriceFormatBuiltIn,
 	SeriesType,
 } from '../model/series-options';
+import { Logical, Time } from '../model/time-data';
 
 import { CandlestickSeriesApi } from './candlestick-series-api';
-import { DataUpdatesConsumer, SeriesDataItemTypeMap } from './data-consumer';
+import { DataUpdatesConsumer, isFulfilledData, SeriesDataItemTypeMap } from './data-consumer';
 import { DataLayer, DataUpdateResponse, SeriesChanges } from './data-layer';
+import { getSeriesDataCreator } from './get-series-data-creator';
 import { IChartApi, MouseEventHandler, MouseEventParams } from './ichart-api';
 import { IPriceScaleApi } from './iprice-scale-api';
 import { ISeriesApi } from './iseries-api';
@@ -48,7 +48,7 @@ import {
 	seriesOptionsDefaults,
 } from './options/series-options-defaults';
 import { PriceScaleApi } from './price-scale-api';
-import { migrateOptions, SeriesApi } from './series-api';
+import { SeriesApi } from './series-api';
 import { TimeScaleApi } from './time-scale-api';
 
 function patchPriceFormat(priceFormat?: DeepPartial<PriceFormat>): void {
@@ -92,61 +92,8 @@ function migrateHandleScaleScrollOptions(options: DeepPartial<ChartOptions>): vo
 	}
 }
 
-function migratePriceScaleOptions(options: DeepPartial<ChartOptions>): void {
-	/* eslint-disable deprecation/deprecation */
-	if (options.priceScale) {
-		warn('"priceScale" option has been deprecated, use "leftPriceScale", "rightPriceScale" and "overlayPriceScales" instead');
-
-		options.leftPriceScale = options.leftPriceScale || {};
-		options.rightPriceScale = options.rightPriceScale || {};
-
-		const position = options.priceScale.position;
-		delete options.priceScale.position;
-
-		options.leftPriceScale = merge(options.leftPriceScale, options.priceScale);
-		options.rightPriceScale = merge(options.rightPriceScale, options.priceScale);
-
-		if (position === 'left') {
-			options.leftPriceScale.visible = true;
-			options.rightPriceScale.visible = false;
-		}
-		if (position === 'right') {
-			options.leftPriceScale.visible = false;
-			options.rightPriceScale.visible = true;
-		}
-		if (position === 'none') {
-			options.leftPriceScale.visible = false;
-			options.rightPriceScale.visible = false;
-		}
-		// copy defaults for overlays
-		options.overlayPriceScales = options.overlayPriceScales || {};
-		if (options.priceScale.invertScale !== undefined) {
-			options.overlayPriceScales.invertScale = options.priceScale.invertScale;
-		}
-		// do not migrate mode for backward compatibility
-		if (options.priceScale.scaleMargins !== undefined) {
-			options.overlayPriceScales.scaleMargins = options.priceScale.scaleMargins;
-		}
-	}
-	/* eslint-enable deprecation/deprecation */
-}
-
-export function migrateLayoutOptions(options: DeepPartial<ChartOptions>): void {
-	/* eslint-disable deprecation/deprecation */
-	if (!options.layout) {
-		return;
-	}
-	if (options.layout.backgroundColor && !options.layout.background) {
-		options.layout.background = { type: ColorType.Solid, color: options.layout.backgroundColor };
-	}
-	/* eslint-enable deprecation/deprecation */
-}
-
-// 转换成内部使用的参数
 function toInternalOptions(options: DeepPartial<ChartOptions>): DeepPartial<ChartOptionsInternal> {
 	migrateHandleScaleScrollOptions(options);
-	migratePriceScaleOptions(options);
-	migrateLayoutOptions(options);
 
 	return options as DeepPartial<ChartOptionsInternal>;
 }
@@ -245,8 +192,6 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 
 	// 添加 Area Series (传递配置，返回 Area Series 的 API 实例)
 	public addAreaSeries(options: AreaSeriesPartialOptions = {}): ISeriesApi<'Area'> {
-		// 调整参数并更新价格格式
-		options = migrateOptions(options);
 		patchPriceFormat(options.priceFormat);
 
 		// 合并默认参数 (浅层合并)
@@ -266,7 +211,6 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 
 	// 添加 baseline series
 	public addBaselineSeries(options: BaselineSeriesPartialOptions = {}): ISeriesApi<'Baseline'> {
-		options = migrateOptions(options);
 		patchPriceFormat(options.priceFormat);
 
 		// to avoid assigning fields to defaults we have to clone them
@@ -284,7 +228,6 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 
 	// 添加 Bar series
 	public addBarSeries(options: BarSeriesPartialOptions = {}): ISeriesApi<'Bar'> {
-		options = migrateOptions(options);
 		patchPriceFormat(options.priceFormat);
 
 		const strictOptions = merge(clone(seriesOptionsDefaults), barStyleDefaults, options) as BarSeriesOptions;
@@ -301,8 +244,6 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 
 	// 添加 candlestick series
 	public addCandlestickSeries(options: CandlestickSeriesPartialOptions = {}): ISeriesApi<'Candlestick'> {
-		// 参数转换
-		options = migrateOptions(options);
 		fillUpDownCandlesticksColors(options);
 		patchPriceFormat(options.priceFormat);
 
@@ -321,7 +262,6 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 
 	// 添加 Histogram series
 	public addHistogramSeries(options: HistogramSeriesPartialOptions = {}): ISeriesApi<'Histogram'> {
-		options = migrateOptions(options);
 		patchPriceFormat(options.priceFormat);
 
 		const strictOptions = merge(clone(seriesOptionsDefaults), histogramStyleDefaults, options) as HistogramSeriesOptions;
@@ -338,7 +278,6 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 
 	// 添加 line series
 	public addLineSeries(options: LineSeriesPartialOptions = {}): ISeriesApi<'Line'> {
-		options = migrateOptions(options);
 		patchPriceFormat(options.priceFormat);
 
 		const strictOptions = merge(clone(seriesOptionsDefaults), lineStyleDefaults, options) as LineSeriesOptions;
@@ -400,23 +339,16 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 		this._crosshairMovedDelegate.unsubscribe(handler);
 	}
 
+	public priceScale(priceScaleId: string): IPriceScaleApi {
+		return new PriceScaleApi(this._chartWidget, priceScaleId);
+	}
+
 	public subscribeCrosshairLeave(handler: () => void): void  {
 		this._crosshairLeaveDelegate.subscribe(handler)
 	}
 
 	public unsubscribeCrosshairLeave(handler: () => void): void  {
 		this._crosshairLeaveDelegate.unsubscribe(handler)
-	}
-
-	// 返回价格刻度 API 实例
-	public priceScale(priceScaleId?: string): IPriceScaleApi {
-		// 如果没有传递价格刻度 ID 的话，就获取默认的，不过已经废弃
-		if (priceScaleId === undefined) {
-			warn('Using ChartApi.priceScale() method without arguments has been deprecated, pass valid price scale id instead');
-			priceScaleId = this._chartWidget.model().defaultVisiblePriceScaleId();
-		}
-
-		return new PriceScaleApi(this._chartWidget, priceScaleId);
 	}
 
 	// 返回时间刻度 API 实例
@@ -476,19 +408,22 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 
 	// 转换到鼠标Event参数, 看着只是参数的转换，没有啥副作用 TODO:内部实现
 	private _convertMouseParams(param: MouseEventParamsImpl): MouseEventParams {
-		const seriesPrices = new Map<ISeriesApi<SeriesType>, BarPrice | BarPrices>();
-		param.seriesPrices.forEach((price: BarPrice | BarPrices, series: Series) => {
-			seriesPrices.set(this._mapSeriesToApi(series), price);
+		const seriesData: MouseEventParams['seriesData'] = new Map();
+		param.seriesData.forEach((plotRow: SeriesPlotRow, series: Series) => {
+			const data = getSeriesDataCreator(series.seriesType())(plotRow);
+			assert(isFulfilledData(data));
+			seriesData.set(this._mapSeriesToApi(series), data);
 		});
 
 		const hoveredSeries = param.hoveredSeries === undefined ? undefined : this._mapSeriesToApi(param.hoveredSeries);
 
 		return {
-			time: param.time && (param.time.businessDay || param.time.timestamp),
+			time: param.time as Time | undefined,
+			logical: param.index as Logical | undefined,
 			point: param.point,
 			hoveredSeries,
 			hoveredMarkerId: param.hoveredObject,
-			seriesPrices,
+			seriesData,
 		};
 	}
 }
