@@ -43,6 +43,7 @@ export interface MouseEventParams {
 	/**
 	 * Data of all series at the location of the event in the chart.
 	 * 图表中事件所在位置的所有系列的价格。
+	 *
 	 * Keys of the map are {@link ISeriesApi} instances. Values are prices.
 	 * Values of the map are original data items
 	 */
