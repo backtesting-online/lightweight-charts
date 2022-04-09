@@ -21,6 +21,7 @@ export interface IDataSource {
 	timeAxisViews(): readonly ITimeAxisView[];
 	// 窗格视图
 	paneViews(pane: Pane): readonly IPaneView[];
+	labelPaneViews(pane?: Pane): readonly IPaneView[];
 
 	/**
 	 * Pane views that are painted on the most top layer

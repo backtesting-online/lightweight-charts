@@ -214,6 +214,13 @@ export interface TimeScaleOptions {
 	 * @defaultValue `undefined`
 	 */
 	tickMarkFormatter?: TickMarkFormatter;
+
+	/**
+	 * Draw small vertical line on time axis labels.
+	 *
+	 * @defaultValue `true`
+	 */
+	ticksVisible: boolean;
 }
 
 // 时间刻度
