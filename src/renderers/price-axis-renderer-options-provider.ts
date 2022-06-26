@@ -6,7 +6,7 @@ import { PriceAxisViewRendererOptions } from './iprice-axis-view-renderer';
 
 const enum RendererConstants {
 	BorderSize = 1,
-	TickLength = 4,
+	TickLength = 5,
 }
 
 // 价格轴渲染器选项的 Provider
@@ -21,6 +21,7 @@ export class PriceAxisRendererOptionsProvider {
 		font: '',
 		fontFamily: '',
 		color: '',
+		paneBackgroundColor: '',
 		paddingBottom: 0,
 		paddingInner: 0,
 		paddingOuter: 0,
@@ -45,18 +46,16 @@ export class PriceAxisRendererOptionsProvider {
 			rendererOptions.fontSize = currentFontSize;
 			rendererOptions.fontFamily = currentFontFamily;
 			rendererOptions.font = makeFont(currentFontSize, currentFontFamily);
-			rendererOptions.paddingTop = Math.floor(currentFontSize / 3.5);
+			rendererOptions.paddingTop = 2.5 / 12 * currentFontSize; // 2.5 px for 12px font
 			rendererOptions.paddingBottom = rendererOptions.paddingTop;
-			rendererOptions.paddingInner = Math.max(
-				Math.ceil(currentFontSize / 2 - rendererOptions.tickLength / 2),
-				0
-			);
-			rendererOptions.paddingOuter = Math.ceil(currentFontSize / 2 + rendererOptions.tickLength / 2);
-			rendererOptions.baselineOffset = Math.round(currentFontSize / 10);
+			rendererOptions.paddingInner = currentFontSize / 12 * rendererOptions.tickLength;
+			rendererOptions.paddingOuter = currentFontSize / 12 * rendererOptions.tickLength;
+			rendererOptions.baselineOffset = 0;
 		}
 
 		rendererOptions.color = this._textColor();
 		rendererOptions.width = this._priceScaleWidth();
+		rendererOptions.paneBackgroundColor = this._paneBackgroundColor();
 
 		return this._rendererOptions;
 	}
@@ -68,6 +67,10 @@ export class PriceAxisRendererOptionsProvider {
 	// 下面的方法都是从 chartModel 上获取 chart options 的数据
 	private _textColor(): string {
 		return this._chartModel.options().layout.textColor;
+	}
+
+	private _paneBackgroundColor(): string {
+		return this._chartModel.backgroundTopColor();
 	}
 
 	private _fontSize(): number {

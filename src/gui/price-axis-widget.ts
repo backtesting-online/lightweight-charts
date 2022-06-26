@@ -35,6 +35,10 @@ const enum Constants {
 
 type IPriceAxisViewArray = readonly IPriceAxisView[];
 
+const enum Constants {
+	LabelOffset = 5,
+}
+
 export class PriceAxisWidget implements IDestroyable {
 	private readonly _pane: PaneWidget;
 	private readonly _options: LayoutOptions;
@@ -213,7 +217,7 @@ export class PriceAxisWidget implements IDestroyable {
 		// 加上支持限制最大宽度
 		if (rendererOptions.width) {
 			// 不用计算的宽度，用参数的
-			tickMarkMaxWidth = rendererOptions.width
+			tickMarkMaxWidth = rendererOptions.width;
 		}
 
 		const resultTickMarksMaxWidth = tickMarkMaxWidth || Constants.DefaultOptimalWidth;
@@ -223,9 +227,11 @@ export class PriceAxisWidget implements IDestroyable {
 			rendererOptions.tickLength +
 			rendererOptions.paddingInner +
 			rendererOptions.paddingOuter +
+			Constants.LabelOffset +
 			resultTickMarksMaxWidth
 		);
-		// make it even
+
+		// make it even, remove this after migration to perfect fancy canvas
 		res += res % 2;
 		return res;
 	}
@@ -455,8 +461,8 @@ export class PriceAxisWidget implements IDestroyable {
 		const rendererOptions = this.rendererOptions();
 
 		const tickMarkLeftX = this._isLeft ?
-			Math.floor((this._size.w - rendererOptions.tickLength) * pixelRatio - rendererOptions.borderSize * pixelRatio) :
-			Math.floor(rendererOptions.borderSize * pixelRatio);
+			Math.floor((this._size.w - rendererOptions.tickLength) * pixelRatio) :
+			0;
 
 		const textLeftX = this._isLeft ?
 			Math.round(tickMarkLeftX - rendererOptions.paddingInner * pixelRatio) :

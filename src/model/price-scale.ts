@@ -183,7 +183,7 @@ export interface PriceScaleOptions {
 	 * Draw small horizontal line on price axis labels.
 	 * 在价格轴标签上绘制小水平线。
 	 *
-	 * @defaultValue `true`
+	 * @defaultValue `false`
 	 */
 	ticksVisible: boolean;
 }

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { Version } from '../../../../versions';
 
 export type LightweightChartsApi = typeof import('lightweight-charts-local') | typeof import('lightweight-charts-3.8');
